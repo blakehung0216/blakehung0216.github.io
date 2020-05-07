@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!--Test2 - Design a basic website outline for LZD output/-->
+<html>
+    <head>        
+        <meta charset="utf-8">
+        <title>TMSS</title>
+        <link href="styles/result_outline2.css" rel="stylesheet" type="text/css">
+    </head>
+    <body class="yui3-skin-sam">
+        <h1>41 Features with Supervised Algorithm</h1>
+        <h2>Daily Results</h2>
+        <p>Here we will show the prediction of this algorithm</p>
+        <!--Calendar-->
+        <script src="scripts/yui-min.js">
+        </script>
+        
+        <!--Calendar ends-->
+        <h2>Algorithm and Methods</h2>
+        <p>Here will show the basic algorithm and how we do the prediction. Here you will know:</p>
+        <ul>
+            <li>Decision Tree introduction</li>
+            <li>Time slide window concept</li>
+            <li>Hierarchical Predict Mechanism</li>
+            <li>How to read Charts</li>
+        </ul>
+        <!--
+        <h2>Realtime Monitor</h2>
+        <p>...</p>
+        -->
+        
+        <h2>Features Selection</h2>
+        <table align="center">
+            <tr>
+            <th>PROFILE</th><th>Unit</th><th>Features Name(En)</th><th>Features Name(Ch)</th>
+            </tr>
+            <tr>
+            <td>PROFILE_01</td><td>Time [tt:mm:jj hh:mm:ss]</td><td>datetime</td><td>日期/時間</td>
+            </tr>
+            <tr>
+            <td>PROFILE_02</td><td>REL_F [mm]</td><td>position</td><td>位置</td>
+            </tr>
+            <tr>
+            <td>PROFILE_03</td><td>v_Feed [mm/min]</td><td>Speed</td><td>進給速度</td>
+            </tr>
+            <tr>
+            <td>PROFILE_05</td><td>B1861 [°C]</td><td>Wire guide roll bearing temp mov1</td><td>導輪軸承移動端溫度(1)</td>
+            </tr>
+            <tr>
+            <td>PROFILE_06</td><td>B1863 [°C]</td><td>Wire guide roll bearing temp fix1</td><td>導輪軸承固定端溫度(1)</td>
+            </tr>
+            <tr>
+            <td>PROFILE_07</td><td>B1865 [°C]</td><td>Wire guide roll bearing temp mov2</td><td>導輪軸承移動端溫度(2)</td>
+            </tr>
+            <tr>
+            <td>PROFILE_08</td><td>B1867 [°C]</td><td>Wire guide roll bearing temp fix2</td><td>導輪軸承固定端溫度(2)</td>
+            </tr>
+            <tr>
+            <td>PROFILE_09</td><td>B1871 [°C]</td><td>Wire guide roll bearing temp mov3</td><td>導輪軸承移動端溫度(3)</td>
+            </tr>
+            <tr>
+            <td>PROFILE_10</td><td>B1873 [°C]</td><td>Wire guide roll bearing temp fix3</td><td>導輪軸承固定端溫度(3)</td>
+            </tr>
+            <tr>
+            <td>PROFILE_11</td><td>B1781 [°C]</td><td>Slurry temp wire web (front)</td><td>漿料溫度線網前方</td>
+            </tr>
+            <tr>
+            <td>PROFILE_12</td><td>B1885 [°C]</td><td>slurry out let temp</td><td>漿料出口溫度</td>
+            </tr>
+            <tr>
+            <td>PROFILE_13</td><td>B1881 [°C]</td><td>slurry temp wire web (rear)</td><td>漿料溫度線網後方</td>
+            </tr>
+            <tr>
+            <td>PROFILE_14</td><td>B1781 [kg/h]</td><td>Slurry mass flow (front)</td><td>漿料前方流量</td>
+            </tr>
+            <tr>
+            <td>PROFILE_15</td><td>B1781 [kg/l]</td><td>Slurry density</td><td>漿料比重</td>
+            </tr>
+            <tr>
+            <td>PROFILE_17</td><td>Y1813 [%]</td><td>Chilled water valve position</td><td>冷卻水閥門開度(熱交換)</td>
+            </tr>
+            <tr>
+            <td>PROFILE_18</td><td>B1887 [°C]</td><td>Chilled water inlet temp</td><td>冷卻水入口溫度</td>
+            </tr>
+            <tr>
+            <td>PROFILE_20</td><td>N1161 [N]</td><td>Wire tension left</td><td>線張力(左)</td>
+            </tr>
+            <tr>
+            <td>PROFILE_21</td><td>N1261 [N]</td><td>Wire tension right</td><td>線張力(右)</td>
+            </tr>
+            <tr>
+            <td>PROFILE_22</td><td>B1784 [kg/h]</td><td>Slurry mass flow (rear)</td><td>漿料流量(後方)</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_03</td><td>nan</td><td>Speed differential</td><td>進給速度與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_05</td><td>nan</td><td>Wire guide roll bearing temp mov1 differential</td><td>導輪軸承移動端溫度(1)與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_06</td><td>nan</td><td>Wire guide roll bearing temp fix1 differential</td><td>導輪軸承固定端溫度(1)與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_07</td><td>nan</td><td>Wire guide roll bearing temp mov2 differential</td><td>導輪軸承移動端溫度(2)與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_08</td><td>nan</td><td>Wire guide roll bearing temp fix2 differential</td><td>導輪軸承固定端溫度(2)與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_09</td><td>nan</td><td>Wire guide roll bearing temp mov3 differential</td><td>導輪軸承移動端溫度(3)與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_10</td><td>nan</td><td>Wire guide roll bearing temp fix3 differential</td><td>導輪軸承固定端溫度(3)與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_11</td><td>nan</td><td>Slurry temp wire web (front) differential</td><td>漿料溫度線網前方與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_12</td><td>nan</td><td>slurry out let temp differential</td><td>漿料出口溫度與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_13</td><td>nan</td><td>slurry temp wire web (rear) differential</td><td>漿料溫度線網後方與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_14</td><td>nan</td><td>Slurry mass flow (front) differential</td><td>漿料前方流量與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_15</td><td>nan</td><td>Slurry density differential</td><td>漿料比重與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_17</td><td>nan</td><td>Chilled water valve position differential</td><td>冷卻水閥門開度(熱交換)與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_18</td><td>nan</td><td>Chilled water inlet temp differential</td><td>冷卻水入口溫度與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_20</td><td>nan</td><td>Wire tension left differential</td><td>線張力(左)與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_21</td><td>nan</td><td>Wire tension right differential</td><td>線張力(右)與上一筆差值</td>
+            </tr>
+            <tr>
+            <td>Diff_PROFILE_22</td><td>nan</td><td>Slurry mass flow (rear) differential</td><td>漿料流量(後方)與上一筆差值</td>
+            </tr>
+        </table>
+    </body>
+</html>
