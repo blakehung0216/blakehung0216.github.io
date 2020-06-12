@@ -6,12 +6,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="styles/bootstrap.min.css">
-    <link href="styles/result_outline3.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="../styles/bootstrap.min.css">
+    <link href="../styles/calendar_outline.css" rel="stylesheet" type="text/css">
 </head>
 <body id="body">
     <br>
-    <h1 id='headline'>41 Features with Supervised Algorithm Results</h1> 
+    <h1 id='headline'>61 Features with Supervised Algorithm Results</h1> 
     
     <div class="container col-sm-4 col-md-7 col-lg-4 mt-5">
         <div class="card">
@@ -48,7 +48,8 @@
 
                 <!--Tool Selection-->
                 <label for="tool"></label>
-                <select class="form-control col-sm-3" name="tool" id="tool" onchange="selectTool()">
+                <select class="form-control col-sm-3" name="tool" id="tool">
+                    <option value=ALL_TOOL>All tools</option>
                     <option value=WSAWB01>B01</option>
                     <option value=WSAWB02>B02</option>
                     <option value=WSAWB03>B03</option>
@@ -114,7 +115,7 @@
 
         </div>
     </div>    
-    <script defer src="scripts/calendar_scripts.js"></script>
+    <script defer src="../scripts/calendar_scripts.js"></script>
     <br>
     
     <!--Image results showing-->

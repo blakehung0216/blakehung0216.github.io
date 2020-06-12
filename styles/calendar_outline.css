@@ -1,4 +1,4 @@
-/*Outline for Results Page*/
+/*Outline for Results Page for Calendar*/
 
 h1 {
     font-size: 30px;
@@ -6,16 +6,6 @@ h1 {
     color: #111111;
 }
 
-h2 {
-    font-size: 20px;
-    color: #111111;
-}
-
-p, li{
-    font-size: 16px;
-    line-height: 2;
-    letter-spacing: 1px;
-}
 
 html {
     font-size: 10px;
@@ -24,30 +14,20 @@ html {
 }
 
 body {
-    width: 600px;
+    width: 90%;
     margin: 0 auto;
-    background-color: #FFEDC5;
+    background-color: #ffffff;
     padding: 0 20px 20px 20px;
     border: 3px solid black;
 }
 
 img {
+    width: 600px;
     display: block;
     margin: 0 auto;
 }
 
-table, th, td {
-    border: 1px solid black;
+table {
+    text-align: center;
+    font-size: 13px;
 }
-
-/*Add Calendar*/
-.yui3-button {
-    margin:10px 0px 10px 0px;
-    color: #fff;
-    background-color: #3476b7;
-}
-
-
-
-
-

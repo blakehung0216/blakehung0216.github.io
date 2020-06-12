@@ -3,22 +3,40 @@
 <html>
     <head>        
         <meta charset="utf-8">
-        <title>TMSS WireSaw Prediction</title>
-        <link href="styles/result_outline.css" rel="stylesheet" type="text/css">
+        <title>TMSS</title>
+        <link href="../styles/tmss_wsaw_outline.css" rel="stylesheet" type="text/css">
     </head>
     <body>
         <h1>TMSS WireSaw Prediction</h1>
         <!--<img src="img/tmss_bigdata.png" alt="My test image">-->
         <h2>About this project</h2>
-        <p>...</p>
+        <p> This project is aimed to detect any anomly situation before B/S (Wire breakage or Machine stop unexpectedly)</p>
         <h2>Prediction Results</h2>
         <p>Here are all the prediction results we have:</p>
         <ul>
-            <li><a href="tmss_wsaw_41.html" target="_blank">41 Features with Supervised Algorithm</a></li>
-            <li><a href="tmss_wsaw_61.html" target="_blank">61 Features with Supervised Algorithm</a></li>
-            <li><a href="tmss_wsaw_20.html" target="_blank">20 Features with Supervised Algorithm</a></li>
-            <li><a href="tmss_wsaw_ncu.html" target="_blank">NCU Prediction with Unsupervised Algorithm</a></li>
+            <li><a href="tmss_wsaw_41.html">41 Features with Supervised Algorithm</a></li>
+            <li><a href="tmss_wsaw_61.html">61 Features with Supervised Algorithm</a></li>
+            <li><a href="tmss_wsaw_20.html">20 Features with Supervised Algorithm</a></li>
+            <li><a href="tmss_wsaw_ncu.html">NCU Prediction with Unsupervised Algorithm</a></li>
         </ul>
+        <p>Here you shouls know what the label and what is that chart legends:
+        <img src="../img/wsaw_img_intro/demo.png" width='800'>
+        Chart result tile contains tool name, lot ID and the pre-alarm mechanism we use in this model. In above example, we choose "WSAWB01", on 2020-06-07 (We check the move out time for this lot).
+        </p>
+        <p>Next, on the right hand side you will see a bunch of legends: </p>
+        <ul>
+            <li><font color="#cc0000">Predict Chart</font> - This line shows the predict line from out predict model</li>
+            <li><font color="#0033cc">3 Weeks Average</font> - This line show the average predict results for previous three weeks</li>
+            <li><font color="#b3b3cc">90%</font> - This line show the 90% binomial distrubution upper line</li>
+            <li><font color="#cc9900">95%</font> - This line show the 95% binomial distrubution upper line</li>
+            <li><font color="#00e6e6">99%</font> - This line show the 99% binomial distrubution upper line</li>
+            <li><font color="#ff0000"><b>Actual B/S</b></font> - This line will exist when there is a real B/S situation</li>
+            <li><font color="#6600ff"><b>TMSS PI-Alarm</b></font> - This line will exist when <font color="#cc0000">Predict</font> line is above <font color="#00e6e6">99%</font> line</li>
+        </ul>
+        
+        
+        
+        <!--Features Table-->
         <h2>Features Table</h2>
         <table align="center">
             <tr>
