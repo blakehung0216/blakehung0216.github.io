@@ -14,7 +14,7 @@ let date_td = document.querySelector("td");
 
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let wsaw_all_tools = ["WSAWB01", "WSAWB02", "WSAWB03", "WSAWB04", "WSAWB05", "WSAWB06", "WSAWB07", "WSAWB08", "WSAWB09", "WSAWB10", "WSAWB11", "WSAWB12", "WSAWB13", "WSAWB14", "WSAWB15", "WSAWB16", "WSAWB17", "WSAWB18", "WSAWB19", "WSAWB20", "WSAWB21", "WSAWC01"];
-let arr_ncu_columns = ["Move In Datetime", "TOOL", "LOT-ID", "Predict Result", "0~30", "31~60", "61~90", "91~120", "121~150", "151~180", "181~210", "211~240", "241~270", "271~300", "301~330", "331~360", "361~390", "391~420", "421~450", "451~480", "481~510", "511~540", "541~570", "571~600", "601~630", "631~660", "661~690", "691~720", "721~750", "751~780"]
+let arr_ncu_columns = ["Move In Datetime", "TOOL", "LOT-ID", "Predict Result", "0", "30", "60", "90", "120", "150", "180", "210", "240", "270", "300", "330", "360", "390", "420", "450", "480", "510", "540", "570", "600", "630", "660", "690", "720", "750"]
 
 function Dictionary() {
 	let items = {};
@@ -96,23 +96,18 @@ myResetButton.onclick = function() {
     //console.log(tmp_result_dates);
     
     for (var k=0; k<arr_select_tools.length; k++) {
-        for (var i=0; i<tmp_result_dates.length; i++) {
-            if (document.getElementById('headline').textContent.split(' ')[0] !== "Kmeans+Random") {
+        if (document.getElementById('headline').textContent.split(' ')[0] !== "Kmeans+Random") {
+            for (var i=0; i<tmp_result_dates.length; i++) {
                 for (var j=1; j<4; j++) {
                     var obj_img = document.getElementById("charts_"+tmp_result_dates[i]+"_"+arr_select_tools[k]+"_"+j.toString());
                     obj_img.parentNode.removeChild(obj_img);
-                }    
-            } else {
-                // For log only
-                //var obj_log = document.getElementById("log_"+tmp_result_dates[i]+"_"+arr_select_tools[k]);
-                //obj_log.parentNode.removeChild(obj_log);
-                // For table
-                var obj_log = document.getElementById("table_" + arr_select_tools[k]);
-                obj_log.parentNode.removeChild(obj_log);
-                reset();
-                return;
+                }
             }
-        }    
+        } else {
+            // For table
+            var obj_log = document.getElementById("table_" + arr_select_tools[k]);
+            obj_log.parentNode.removeChild(obj_log);
+        }
     }
     
     reset();
@@ -212,6 +207,27 @@ function readTextFile(str_path_to_file) {
     return allText
 }
 
+function re_shape_arr(arr_tmp) {
+    var arr_result = [];
+    for (var i=0; i<arr_tmp.length; i++) {
+        var fix_value = arr_tmp[i];
+        if (i !== 0) {
+            //fix_value = arr_tmp[i].replace(/\/n\|\/r| |"/g,'');
+            fix_value = arr_tmp[i].replace(/ /g, '');
+            fix_value = fix_value.replace(/[\r\n]/g, '');
+        }
+        arr_result.push(fix_value);
+    }
+    
+    if (arr_result.length < 30) {
+        for (x=0; x<(31-arr_result.length); x++) {
+            arr_result.push('0.0'); 
+        }
+    }
+    
+    return arr_result;
+}
+
 function showNCUResultsImages() {
     // Open file according user choosing
     var tmp_result_dates = arr_select_dates.slice();
@@ -226,23 +242,39 @@ function showNCUResultsImages() {
     
     // Result result declear
     var table_ncu = document.createElement("TABLE");
-    table_ncu.id = "table_" + str_selected_tool;
+    var str_table_id = "table_" + str_selected_tool;
+    if (document.getElementById(str_table_id)) {
+        var obj_table = document.getElementById(str_table_id);
+        obj_table.parentNode.removeChild(obj_table);
+    }
+    table_ncu.id = str_table_id;
     table_ncu.border = "3px #FFD382 dashed";
     table_ncu.align = "center";
     //table_ncu.textAlign = "center"; // not working
     //table_ncu.fontSize = '150px'; // not working
     
-    // Add columns looks like shit
-    /*table_column = document.createElement('tbody');
+    // Add columns
+    table_column = document.createElement('tbody');
+    table_column.style.background = "#994C00";
+    table_column.style.fontSize = "5px";
+    table_column.style.color = "#ffffff";
     
     var tr_ncu = table_column.appendChild(document.createElement('tr'));
     for (var i=0; i<arr_ncu_columns.length; i++) {
-        var td_ncu = tr_ncu.appendChild(document.createElement('td'));
-        var a_ncu = td_ncu.appendChild(document.createElement('a'));
+        var td_ncu = document.createElement('td');
+        if (i === 0) { // Move In Datetime
+            td_ncu.style.width = '150px';
+        } else if (i > 3) {
+            td_ncu.style.width = '40px';
+        }
+        //var td_ncu = tr_ncu.appendChild(document.createElement('td'));
+        tr_ncu.appendChild(td_ncu);
+        var a_ncu = td_ncu.appendChild(document.createElement('b'));
         a_ncu.innerText = arr_ncu_columns[i];
     }
     table_ncu.appendChild(table_column);//*/
     
+    // Results Information
     for (var i=0; i<tmp_result_dates.length; i++) {
         // Open log file
         //var str_log_filename = str_log_path+"."+str_selected_tool+"_"+tmp_result_dates[i]+".log"; // This won't work, don't know why
@@ -257,7 +289,7 @@ function showNCUResultsImages() {
             str_tool_log = str_allText;
         } else {
         // Choose for select tool
-            var arr_tool_log = str_allText.split("\n");
+            var arr_tool_log = str_allText.split("\r\n");
             for (var j=0; j<arr_tool_log.length; j++) {
                 if (arr_tool_log[j].split(", ")[1] === str_selected_tool) {
                     str_tool_log += arr_tool_log[j] + "\n";
@@ -277,43 +309,74 @@ function showNCUResultsImages() {
         // [[], [], ... []]
         var arr_ncu_remodel = [];
         var arr_ncu_log = str_tool_log.split("\n");
+        //console.log("arr_ncu_log");
+        //console.log(arr_ncu_log);
         var arr_ncu_tmp = [];
         for (var j=0; j<arr_ncu_log.length; j++) {
             arr_ncu_tmp = arr_ncu_log[j].split(",");
-            //console.log(arr_ncu_tmp);
-            if (arr_ncu_tmp.length < 30 && arr_ncu_tmp[0] !== "") {
-                for (x=0; x<(31-arr_ncu_tmp.length); x++) {
-                    arr_ncu_tmp.push("0.0"); 
-                }
-            }
-            //console.log(arr_ncu_tmp.length);
+            if (arr_ncu_tmp.length === 1) { continue;}
+            arr_ncu_tmp = re_shape_arr(arr_ncu_tmp);
             arr_ncu_remodel.push(arr_ncu_tmp);
         }
-        //console.log(arr_ncu_remodel[0]);
-        //console.log(arr_ncu_remodel[20][2]);
         
-        // Table attributes
-        //table_ncu.id = "log_" + tmp_result_dates[i] + "_" + str_selected_tool;
-        //table_ncu.border = '1px solid black';
-        
+        //console.log("arr_ncu_remodel");
+        //console.log(arr_ncu_remodel);
         
         var tbody_ncu = document.createElement("tbody");
-        console.log(arr_ncu_remodel);
         for (j=0; j<arr_ncu_remodel.length; j++) {
             var tr_ncu = tbody_ncu.appendChild(document.createElement('tr'));
             for (var k=0; k<arr_ncu_remodel[j].length; k++) {
                 if (arr_ncu_remodel[j][k] !== "") {
-                    var td_ncu = tr_ncu.appendChild(document.createElement('td'));
-                    var a_ncu = td_ncu.appendChild(document.createElement('a'));
-                    a_ncu.innerText = arr_ncu_remodel[j][k];
-                    //td_ncu.classList.add("bg-danger"); // All red XD
+                    var td_ncu = document.createElement('td');
+                    //td_ncu.style.width = '';
+                    //console.log(arr_ncu_remodel[j][k].replace(' ', ''))
+                    var cell_value = arr_ncu_remodel[j][k];
+                    //console.log(cell_value);
+                    //console.log(typeof(cell_value));
+                    //cell_value = cell_value.replace(/\/n| |"/g,'');
+                    if (cell_value === "ALARM") {
+                        td_ncu.style.backgroundColor = '#ff0000';
+                    } else if (cell_value === "SAFE") {
+                        td_ncu.style.backgroundColor = '#00ff00';
+                    } else if (cell_value === "0.0" || cell_value === "1.0") {
+                        td_ncu.style.backgroundColor = '#66ff66';
+                        tr_ncu.appendChild(td_ncu);
+                        continue;
+                    } else if (cell_value === "2.0") {
+                        td_ncu.style.backgroundColor = '#b2ff66';
+                        tr_ncu.appendChild(td_ncu);
+                        continue;
+                    } else if (cell_value === "3.0") {
+                        td_ncu.style.backgroundColor = '#ffff66';
+                        tr_ncu.appendChild(td_ncu);
+                        continue;
+                    } else if (cell_value === "4.0") {
+                        td_ncu.style.backgroundColor = '#ffb266';
+                        tr_ncu.appendChild(td_ncu);
+                        continue;
+                    } else if (cell_value === "5.0") {
+                        td_ncu.style.backgroundColor = '#ff6666';
+                        tr_ncu.appendChild(td_ncu);
+                        continue;
+                    } /*else {
+                        console.log(cell_value);
+                        console.log(cell_value.length);
+                    }//*/ // Debug
                     
-                    // Now we add some color according to different situations
-                    if (arr_ncu_remodel[j][k].replace(' ', '') === "ALARM") {
-                        tr_ncu.classList.add("bg-danger");
-                    } else {
-                        tr_ncu.classList.add("bg-success");
+                    // Color Date Tool Lot
+                    if (k === 0) {
+                        td_ncu.style.backgroundColor = '#C0C0C0';
+                    } else if (k === 1) {
+                        td_ncu.style.backgroundColor = '#E0E0E0';
+                    } else if (k === 2) {
+                        td_ncu.style.backgroundColor = '#ffffff';
                     }
+                    
+                    
+                    //var a_ncu = td_ncu.appendChild(document.createElement('a'));
+                    //a_ncu.innerText = cell_value;//arr_ncu_remodel[j][k];
+                    td_ncu.appendChild(document.createTextNode(cell_value));
+                    tr_ncu.appendChild(td_ncu);
                 }
             }
         }
@@ -328,7 +391,7 @@ function showNCUResultsImages() {
     return
 }
 
-myGoButton.onclick = function() {    
+myGoButton.onclick = function() {
     var tmp_result_dates = arr_select_dates.slice();//We copy and keep the original array
     tmp_result_dates = tmp_result_dates.sort();
     var str_db_msg = "";

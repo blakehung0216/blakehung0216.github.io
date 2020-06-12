@@ -33,8 +33,19 @@
             <li><font color="#ff0000"><b>Actual B/S</b></font> - This line will exist when there is a real B/S situation</li>
             <li><font color="#6600ff"><b>TMSS PI-Alarm</b></font> - This line will exist when <font color="#cc0000">Predict</font> line is above <font color="#00e6e6">99%</font> line</li>
         </ul>
+        <br>
+        <!--NCU information-->
+        <p>As for the NCU result, you will see the similar table:</p>
+        <img src="../img/wsaw_img_intro/demo_ncu.png" width='1000'>
+        <p>It is quite simple to understand, we classify the predict results to 5 different situation:</p>
         
-        
+        <ul>
+            <li><font color="#66ff66">Class0</font> and <font color="#66ff66">Class1</font> - This indicates no any predict abnormality</li>
+            <li><font color="#b2ff66">Class2</font> - This still indicates no any predict anomly, but risk higher than Class1</li>
+            <li><font color="#ffff66">Class3</font> - This indicates a normal, keep raising might triger predict pre-alarm</li>
+            <li><font color="#ffb266">Class4</font> and <font color="#ff6666">Class5</font> - This indicates dangerous predict results, might need to check the tool status ot take ations</li>
+        </ul>
+        <br>
         
         <!--Features Table-->
         <h2>Features Table</h2>
