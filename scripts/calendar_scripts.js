@@ -281,7 +281,6 @@ function showNCUResultsImages() {
         var str_log_filename = str_log_path+tmp_result_dates[i]+".log";
         //console.log(tmp_result_dates[i]);
         
-        var rawFile = new XMLHttpRequest();
         var str_allText = readTextFile(str_log_filename);
         var str_tool_log = "";
         // If user choose all tools
