@@ -1,0 +1,41 @@
+/*Outline for Results Page*/
+
+h1 {
+    font-size: 40px;
+    text-align: center;
+    color: #111111;
+}
+
+h2 {
+    font-size: 20px;
+    color: #111111;
+}
+
+p, li{
+    font-size: 16px;
+    line-height: 2;
+    letter-spacing: 1px;
+}
+
+html {
+    font-size: 10px;
+    font-family: placeholder: this should be the rest of the output you got from Google fonts;
+    background-color: #EB9D10;
+}
+
+body {
+    width: 75%;
+    margin: 0 auto;
+    background-color: #FFEDC5;
+    padding: 0 20px 20px 20px;
+    border: 3px solid black;
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
