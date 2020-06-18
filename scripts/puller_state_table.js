@@ -105,6 +105,8 @@ function puller_tool_state(str_tool) {
                 tr_puller.style.backgroundColor = '#66ff66';
             } else if (cell_value === 'ALARM') {
                 tr_puller.style.backgroundColor = '#ff6666';
+            } else if (cell_value === 'No detection') {
+                tr_puller.style.backgroundColor = '#C0C0C0';
             }
             
             td_puller.appendChild(document.createTextNode(cell_value));
