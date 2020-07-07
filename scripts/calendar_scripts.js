@@ -14,7 +14,9 @@ let date_td = document.querySelector("td");
 
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let wsaw_all_tools = ["WSAWB01", "WSAWB02", "WSAWB03", "WSAWB04", "WSAWB05", "WSAWB06", "WSAWB07", "WSAWB08", "WSAWB09", "WSAWB10", "WSAWB11", "WSAWB12", "WSAWB13", "WSAWB14", "WSAWB15", "WSAWB16", "WSAWB17", "WSAWB18", "WSAWB19", "WSAWB20", "WSAWB21", "WSAWC01"];
-let arr_ncu_columns = ["Move In Datetime", "TOOL", "LOT-ID", "Predict Result", "0", "30", "60", "90", "120", "150", "180", "210", "240", "270", "300", "330", "360", "390", "420", "450", "480", "510", "540", "570", "600", "630", "660", "690", "720", "750"]
+let arr_ncu_columns = ["Move In Datetime", "TOOL", "LOT-ID", "Predict Result", "0", "30", "60", "90", "120", "150", "180", "210", "240", "270", "300", "330", "360", "390", "420", "450", "480", "510", "540", "570", "600", "630", "660", "690", "720", "750"];
+
+let arr_cm = ['Catch Rate', 'False Alarm', 'Accuracy'];
 
 function Dictionary() {
 	let items = {};
@@ -50,24 +52,28 @@ function next() {
     currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
     currentMonth = (currentMonth + 1) % 12;
     showCalendar(currentMonth, currentYear);
+    showConfusionMatrix();
 }
 
 function previous() {
     currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
     currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;    
     showCalendar(currentMonth, currentYear);
+    showConfusionMatrix();
 }
 
 function now() {
     currentYear = today.getFullYear();
     currentMonth = today.getMonth();
     showCalendar(currentMonth, currentYear);
+    showConfusionMatrix();
 }
 
 function jump() {
     currentYear = parseInt(selectYear.value);
     currentMonth = parseInt(selectMonth.value);
     showCalendar(currentMonth, currentYear);
+    showConfusionMatrix();
 }
 
 // Reset dates
@@ -185,6 +191,8 @@ function showResultsImages() {
         arr_select_tools.push(str_selected_tool);    
     }
     //console.log(arr_select_tools);
+    
+    showConfusionMatrix();
     return;
 }
 
@@ -410,6 +418,102 @@ myGoButton.onclick = function() {
     }
 }
 
+function getDefaultColor(str_yyyymmdd) {
+        
+    var int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : today.getMonth()) + String(today.getDate()<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
+    //console.log(int_today_value);
+    if (parseInt(str_yyyymmdd) > int_today_value) { return  "";}
+    
+    var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Kmeans+Random
+    var str_yyyy_mm_dd = str_yyyymmdd.substring(0,4) + '-' + str_yyyymmdd.substring(4,6) + '-' + str_yyyymmdd.substring(6,8)//str_yyyymmdd[0:4] + str_yyyymmdd[4:6] + str_yyyymmdd[6:8];
+    var str_filename = 'Daily_' + str_yyyy_mm_dd + '_' + document.getElementById('tool').value;
+    //var str_log_path = "/tmss_raw_data/WSAW_CM/" + str_headline_model + '/' + str_filename
+    var str_log_path = "../" + str_headline_model + '/' + str_filename
+    
+    var str_all_test = readTextFile(str_log_path); // 2020-07-01,WSAWB01,MJFK4AJ,0,0
+    var arr_lot_record = str_all_test.split('\n');
+    if (arr_lot_record.length > 0) {
+        for (var i=1; i<arr_lot_record.length; i++) {
+            str_status = arr_lot_record[i].split(',')[3];
+            str_predict = arr_lot_record[i].split(',')[4];
+            if (str_status==='0' && str_predict==='1') {
+                if (document.getElementById('tool').value !== 'ALL_TOOL') {
+                   return "bg-warning"; 
+                }
+            } else if (str_status==='1' && str_predict==='0') {
+                return "bg-danger";
+            } else if (str_status==='1' && str_predict==='1') {
+                if (document.getElementById('tool').value !== 'ALL_TOOL') {
+                    return "bg-success";
+                }
+            }
+        }    
+    }
+    
+    //console.log(arr_lot_record[1]);
+    return "";
+}
+
+function showConfusionMatrix() {
+    var table_cm = document.createElement("TABLE");
+    var str_table_id = "table_cm";
+    if (document.getElementById('tool').value === 'ALL_TOOL') {
+        if (document.getElementById(str_table_id)) {
+            var obj_table = document.getElementById(str_table_id);
+            obj_table.parentNode.removeChild(obj_table);
+        }
+    } else {
+        currentYear = selectYear.value;
+        currentMonth = parseInt(selectMonth.value) + 1;
+        currentMonth = currentMonth<10 ? ('0'+currentMonth) : (currentMonth.toString());
+        if (currentYear !== '' && currentMonth !== '') {
+            var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Kmeans+Random
+            var str_filename = 'CM_' + currentYear + '-' + currentMonth + '_' + document.getElementById('tool').value; //CM_2020-01_WSAWB01
+            //var str_log_path = "/tmss_raw_data/WSAW_CM/" + str_headline_model + '/' + str_filename
+            var str_log_path = "../" + str_headline_model + '/' + str_filename
+            var str_all_test = readTextFile(str_log_path);
+            //console.log(str_log_path);
+            
+            if (document.getElementById(str_table_id)) {
+                var obj_table = document.getElementById(str_table_id);
+                obj_table.parentNode.removeChild(obj_table);
+            }
+            table_cm.id = str_table_id;
+            table_cm.border = "3px #FFD382 dashed";
+            table_cm.align = "center";
+            
+            // Cloumn name
+            var tr_cm = table_cm.appendChild(document.createElement('tr'));
+            for (i=0; i<arr_cm.length; i++) {
+                var td_cm = document.createElement('td');
+                td_cm.style.width = '100px';
+                td_cm.style.textAlign = 'center';
+                td_cm.style.fontSize = '10px';
+                tr_cm.appendChild(td_cm);
+                var a_cm = td_cm.appendChild(document.createElement('b'));
+                a_cm.innerText = arr_cm[i];
+            }
+            // Column result
+            var tr_cm2 = table_cm.appendChild(document.createElement('tr'));
+            for (i=0; i<arr_cm.length; i++) {
+                var td_cm2 = document.createElement('td');
+                td_cm2.style.width = '100px';
+                td_cm2.style.textAlign = 'center';
+                td_cm2.style.fontSize = '10px';
+                tr_cm2.appendChild(td_cm2);
+                var a_cm2 = td_cm2.appendChild(document.createElement('b'));
+                a_cm2.innerText = str_all_test.split(',')[i];
+            }
+            
+            obj_paragraph = document.getElementById('demo');
+            obj_paragraph.appendChild(table_cm);
+        }
+    }
+    currentYear = parseInt(selectYear.value);
+    currentMonth = parseInt(selectMonth.value);
+    showCalendar(currentMonth, currentYear);
+}
+
 function showCalendar(month, year) {
 
     let firstDay = (new Date(year, month)).getDay();
@@ -427,7 +531,11 @@ function showCalendar(month, year) {
     
     // Use original calendar if exists
     _month = month+1;
-    if (_month<10) { _month = "0" + _month;}
+    if (_month<10) {
+        _month = "0" + _month;
+    } else {
+        _month = _month.toString();
+    }
     str_key = year + _month;
     
     // creating all cells
@@ -455,23 +563,39 @@ function showCalendar(month, year) {
                 //date++;
             }
             else {
+                /*
+                We now add a new rules:
+                - When that date is having B/S, but we did not predict it, then the cell default color -> .bg-danger
+                - When that date is having B/S, and we did predict it, then the cell default color -> .bg-success
+                - When that date is normal, but we did predict it, then the cell default color -> .bg-warning
+                */
                 _date = date;
-                if (_date<10) { _date = "0"+_date; }
+                if (_date<10) {
+                    _date = "0"+_date;
+                } else {
+                    _date = _date.toString();
+                }
                 cell.id = str_key+_date;
                 let cellText = document.createTextNode(date);
+                let str_default_color = getDefaultColor(str_key+_date);
+                //console.log(str_default_color);
                 //The classes for background colors are: .bg-primary, .bg-success, .bg-info,
                 //.bg-warning, .bg-danger, .bg-secondary, .bg-dark and .bg-light.
                 if (date === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
                     if (arr_select_dates.includes(cell.id)) {
                         cell.classList.add("bg-secondary");
                     } else {
-                        cell.classList.add("bg-info");    
+                        cell.classList.add("bg-info");
                     }
                 } // color today's date
                 
                 // We might choose Next/Previous Month
                 if (arr_select_dates.includes(cell.id)) {
                     cell.classList.add("bg-secondary");
+                }
+                
+                if (str_default_color !== '') {
+                    cell.classList.add(str_default_color);    
                 }
                 
                 // Make a function, once user clicks the specific date then take them to the result charts place
@@ -485,7 +609,7 @@ function showCalendar(month, year) {
                     
                     // Dates color
                     // If date is today
-                    if (cellText.nodeValue === String(today.getDate()) && year === today.getFullYear() && month === today.getMonth()) {
+                    if (cellText.nodeValue === String(today.getDate()) && year === today.getFullYear() && month === today.getMonth() && str_default_color === '') {
                         // Select date to see result
                         if (cell.classList.contains("bg-info")) {
                             cell.classList.remove("bg-info");
@@ -499,14 +623,29 @@ function showCalendar(month, year) {
                             arr_select_dates.splice(_index, 1);
                         }
                     // If date is not today
+                    } else if (str_default_color !== '') {
+                        // Select date to see result
+                        if (cell.classList.contains(str_default_color)) {
+                            cell.classList.remove(str_default_color);
+                            cell.classList.add("bg-secondary");
+                            arr_select_dates.push(str_date)
+                        // Unselect date to NOT see result
+                        } else {
+                            if (cell.classList.contains("bg-secondary")) { cell.classList.remove("bg-secondary");}
+                            cell.classList.add(str_default_color);
+                            const _index = arr_select_dates.indexOf(str_date);
+                            arr_select_dates.splice(_index, 1);
+                        }
+                    // If date is not today
                     } else {
                         // Unselect date to NOT see result
                         if (cell.classList.contains("bg-secondary")) {
                             cell.classList.remove("bg-secondary");
                             const _index = arr_select_dates.indexOf(str_date);
                             arr_select_dates.splice(_index, 1);
-                        // Select date to see result
+                        // Select date to see result    
                         } else {
+                            //if (cell.classList.contains(str_default_color)) { cell.classList.remove(str_default_color);}
                             cell.classList.add("bg-secondary");
                             arr_select_dates.push(str_date)
                         }
@@ -522,3 +661,4 @@ function showCalendar(month, year) {
 }
 
 showCalendar(currentMonth, currentYear);
+showConfusionMatrix();
