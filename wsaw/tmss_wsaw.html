@@ -22,7 +22,34 @@
             <li><a href="tmss_wsaw_ncu.html">NCU Prediction with Unsupervised Algorithm</a></li>
             <li><a href="tmss_wsaw_roller_temp.html">Roller Temperature with Supervised Algorithm</a></li>
         </ul>
-        <p>Here you shouls know what the label and what is that chart legends:
+        
+        <p>You will see the similar graph like this: <img src=../img/wsaw_img_intro/calendar_color.png width="400"> The calendar result showing introduction:</p>
+        
+        <!--Confusion Matrix-->
+        <table align="center">
+            <tr align="center">
+                <th width='60'>Confusion
+                Matrix</th>
+                <th width='314'><font size="4">Actual</font></th>
+            </tr>
+        </table>
+        
+        <table align="center">
+            <tr align="center">
+                <th><font size="4">Predict</font></th>
+                <table align="center">
+                    <tr align="center">
+                        <td width='150px' bgcolor='green'><font size="4">True Positive</font></td><td width='150px' bgcolor='orange'><font size="4">False Negative</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td width='150px' bgcolor='red'><font size="4">False Negative</font></td><td width='150px'><font size="4">True Negative</font></td>
+                    </tr>
+                </table>
+            </tr>
+        </table>
+
+        
+        <p>After you select dates and click '<b>Show Result</b>', you would see the similar chart. Here you should know what the label and what is that chart legends:
         <img src="../img/wsaw_img_intro/demo.png" width='800'>
         Chart result tile contains tool name, lot ID and the pre-alarm mechanism we use in this model. In above example, we choose "WSAWB01", on 2020-06-07 (We check the move out time for this lot).
         </p>
@@ -36,6 +63,7 @@
             <li><font color="#ff0000"><b>Actual B/S</b></font> - This line will exist when there is a real B/S situation</li>
             <li><font color="#6600ff"><b>TMSS PI-Alarm</b></font> - This line will exist when <font color="#cc0000">Predict</font> line is above <font color="#00e6e6">99%</font> line</li>
         </ul>
+        
         <br>
         <!--NCU information-->
         <p>As for the NCU result, you will see the similar table:</p>
