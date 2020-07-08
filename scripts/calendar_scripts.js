@@ -81,13 +81,15 @@ function reset() {
     // Clear select dates
     arr_select_dates = [];
     arr_select_tools = [];
-    showCalendar(currentMonth, currentYear);
     
     // Clear showing dates
     document.getElementById("demo").innerHTML = "";
     
+    showCalendar(currentMonth, currentYear);
+    showConfusionMatrix();
+    
     // Jump to Today
-    now();
+    //now();
     
     return;
 }
@@ -427,8 +429,8 @@ function getDefaultColor(str_yyyymmdd) {
     var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Kmeans+Random
     var str_yyyy_mm_dd = str_yyyymmdd.substring(0,4) + '-' + str_yyyymmdd.substring(4,6) + '-' + str_yyyymmdd.substring(6,8)//str_yyyymmdd[0:4] + str_yyyymmdd[4:6] + str_yyyymmdd[6:8];
     var str_filename = 'Daily_' + str_yyyy_mm_dd + '_' + document.getElementById('tool').value;
-    //var str_log_path = "/tmss_raw_data/WSAW_CM/" + str_headline_model + '/' + str_filename
-    var str_log_path = "../" + str_headline_model + '/' + str_filename
+    var str_log_path = "WSAW_CM/" + str_headline_model + '/' + str_filename
+    //var str_log_path = "../" + str_headline_model + '/' + str_filename
     
     var str_all_test = readTextFile(str_log_path); // 2020-07-01,WSAWB01,MJFK4AJ,0,0
     var arr_lot_record = str_all_test.split('\n');
@@ -469,8 +471,8 @@ function showConfusionMatrix() {
         if (currentYear !== '' && currentMonth !== '') {
             var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Kmeans+Random
             var str_filename = 'CM_' + currentYear + '-' + currentMonth + '_' + document.getElementById('tool').value; //CM_2020-01_WSAWB01
-            //var str_log_path = "/tmss_raw_data/WSAW_CM/" + str_headline_model + '/' + str_filename
-            var str_log_path = "../" + str_headline_model + '/' + str_filename
+            var str_log_path = "WSAW_CM/" + str_headline_model + '/' + str_filename
+            //var str_log_path = "../" + str_headline_model + '/' + str_filename
             var str_all_test = readTextFile(str_log_path);
             //console.log(str_log_path);
             
@@ -531,12 +533,7 @@ function showCalendar(month, year) {
     
     // Use original calendar if exists
     _month = month+1;
-    if (_month<10) {
-        _month = "0" + _month;
-    } else {
-        _month = _month.toString();
-    }
-    str_key = year + _month;
+    _month = _month<10 ? ("0" + _month) : (_month.toString());
     
     // creating all cells
     let date = 1;
@@ -570,32 +567,35 @@ function showCalendar(month, year) {
                 - When that date is normal, but we did predict it, then the cell default color -> .bg-warning
                 */
                 _date = date;
-                if (_date<10) {
-                    _date = "0"+_date;
-                } else {
-                    _date = _date.toString();
-                }
+                _date = _date<10 ? ("0"+_date) : (_date.toString());
+                var str_key = year + _month;
+
                 cell.id = str_key+_date;
                 let cellText = document.createTextNode(date);
                 let str_default_color = getDefaultColor(str_key+_date);
                 //console.log(str_default_color);
                 //The classes for background colors are: .bg-primary, .bg-success, .bg-info,
                 //.bg-warning, .bg-danger, .bg-secondary, .bg-dark and .bg-light.
+                
+                // color today's date
                 if (date === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
                     if (arr_select_dates.includes(cell.id)) {
                         cell.classList.add("bg-secondary");
                     } else {
                         cell.classList.add("bg-info");
                     }
-                } // color today's date
+                // color other dates by default color
+                } else {
+                    if (arr_select_dates.includes(cell.id)) {
+                        cell.classList.add("bg-secondary");
+                    } else {
+                        if (str_default_color !== '') { cell.classList.add(str_default_color);}
+                    }
+                }
                 
                 // We might choose Next/Previous Month
                 if (arr_select_dates.includes(cell.id)) {
                     cell.classList.add("bg-secondary");
-                }
-                
-                if (str_default_color !== '') {
-                    cell.classList.add(str_default_color);    
                 }
                 
                 // Make a function, once user clicks the specific date then take them to the result charts place
