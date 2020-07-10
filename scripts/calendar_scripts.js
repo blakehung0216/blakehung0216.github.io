@@ -422,14 +422,13 @@ myGoButton.onclick = function() {
 
 function getDefaultColor(str_yyyymmdd) {
         
-    var int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : today.getMonth()) + String(today.getDate()<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
-    //console.log(int_today_value);
+    var int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
     if (parseInt(str_yyyymmdd) > int_today_value) { return  "";}
     
     var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Kmeans+Random
     var str_yyyy_mm_dd = str_yyyymmdd.substring(0,4) + '-' + str_yyyymmdd.substring(4,6) + '-' + str_yyyymmdd.substring(6,8)//str_yyyymmdd[0:4] + str_yyyymmdd[4:6] + str_yyyymmdd[6:8];
     var str_filename = 'Daily_' + str_yyyy_mm_dd + '_' + document.getElementById('tool').value;
-    var str_log_path = "WSAW_CM/" + str_headline_model + '/' + str_filename
+    var str_log_path = "WSAW_CM/" + str_headline_model + '/' + str_filename;
     //var str_log_path = "../" + str_headline_model + '/' + str_filename
     
     var str_all_test = readTextFile(str_log_path); // 2020-07-01,WSAWB01,MJFK4AJ,0,0
