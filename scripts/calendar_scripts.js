@@ -7,6 +7,7 @@ let myGoButton = document.getElementById('btn_go');
 let myResetButton = document.getElementById('btn_clr');
 let mySelect = document.getElementById('str_select');
 let selectedTool = document.getElementById('tool');
+let str_cal_headline = document.getElementById('headline').textContent.split(' ')[3] // Supervised or Hierarchical
 
 //let date_tr = document.querySelector('tr');
 let date_tbl = document.getElementById("calendar-body");
@@ -98,7 +99,7 @@ myResetButton.onclick = function() {
     // Clear Charts
     var tmp_result_dates = arr_select_dates.slice();
     tmp_result_dates = tmp_result_dates.sort();
-    var str_selected_tool = (selectedTool.value);
+    //var str_selected_tool = (selectedTool.value);
     
     //console.log(arr_select_tools);
     //console.log(tmp_result_dates);
@@ -108,7 +109,9 @@ myResetButton.onclick = function() {
             for (var i=0; i<tmp_result_dates.length; i++) {
                 for (var j=1; j<4; j++) {
                     var obj_img = document.getElementById("charts_"+tmp_result_dates[i]+"_"+arr_select_tools[k]+"_"+j.toString());
-                    obj_img.parentNode.removeChild(obj_img);
+                    if (obj_img) {
+                        obj_img.parentNode.removeChild(obj_img);    
+                    }
                 }
             }
         } else {
@@ -118,84 +121,12 @@ myResetButton.onclick = function() {
         }
     }
     
-    reset();
-}
-
-// Resuls showing
-var str_wsaw_img_path = "../img/wsaw_img/";
-function showResultsImages() {
-    var tmp_result_dates = arr_select_dates.slice();
-    tmp_result_dates = tmp_result_dates.sort();
-    var str_selected_tool = (selectedTool.value);
-    
-    var str_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61 models
-    //console.log(str_model);
-    
-    // If the you select All tools
-    if (str_selected_tool === 'ALL_TOOL') {
-        for (var i=0; i<tmp_result_dates.length; i++) {
-            for (var x=0; x<wsaw_all_tools.length; x++) {
-                //alert("img/wsaw_img/"+tmp_result_dates[i]+"_"+str_selected_tool+"_*_41_NoFeedback.png"); // OK!
-                var str_img_path1 = str_wsaw_img_path+tmp_result_dates[i]+"/"+wsaw_all_tools[x]+"/"+str_model+"/1.png";
-                var str_img_path2 = str_wsaw_img_path+tmp_result_dates[i]+"/"+wsaw_all_tools[x]+"/"+str_model+"/2.png";
-                var str_img_path3 = str_wsaw_img_path+tmp_result_dates[i]+"/"+wsaw_all_tools[x]+"/"+str_model+"/3.png";
-                var arr_charts_path = [str_img_path1, str_img_path2, str_img_path3];
-                //alert(str_img_path);
-                for (var j=0; j<arr_charts_path.length; j++) {
-                    // If the charts
-                    var str_chart_id = "charts_" + tmp_result_dates[i] + "_" + wsaw_all_tools[x] + "_" + (j+1).toString();
-                    var check_exist = document.getElementById(str_chart_id);
-                    if (!check_exist) {
-                        var obj_img = document.createElement("IMG");
-                        obj_img.setAttribute("src", arr_charts_path[j]);
-                        //obj_img.setAttribute("width", "600");
-                        obj_img.setAttribute("style", "width:900px;");
-                        obj_img.setAttribute("alt", "");
-                        obj_img.id = str_chart_id;
-                        if (obj_img !== null) { document.body.appendChild(obj_img);}
-                    }
-                } // End for j
-            }// End for x
-            
-            //if (!arr_select_tools.includes(wsaw_all_tools[x]) && tmp_result_dates.length>0) {
-            //    arr_select_tools.push(wsaw_all_tools[x]);    
-            //}
-        }// End for i
-        arr_select_tools = wsaw_all_tools.slice();
-        return;
-    } // All tools
-    
-    for (var i=0; i<tmp_result_dates.length; i++) {
-        //alert("img/wsaw_img/"+tmp_result_dates[i]+"_"+str_selected_tool+"_*_41_NoFeedback.png"); // OK!
-        var str_img_path1 = str_wsaw_img_path+tmp_result_dates[i]+"/"+str_selected_tool+"/"+str_model+"/1.png";
-        var str_img_path2 = str_wsaw_img_path+tmp_result_dates[i]+"/"+str_selected_tool+"/"+str_model+"/2.png";
-        var str_img_path3 = str_wsaw_img_path+tmp_result_dates[i]+"/"+str_selected_tool+"/"+str_model+"/3.png";
-        var arr_charts_path = [str_img_path1, str_img_path2, str_img_path3];
-        //alert(str_img_path);
-        for (var j=0; j<arr_charts_path.length; j++) {
-            // If the charts
-            var str_chart_id = "charts_" + tmp_result_dates[i] + "_" + str_selected_tool + "_" + (j+1).toString();
-            var check_exist = document.getElementById(str_chart_id);
-            if (!check_exist) {
-                var obj_img = document.createElement("IMG");
-                obj_img.setAttribute("src", arr_charts_path[j]);
-                //obj_img.setAttribute("width", "600");
-                obj_img.setAttribute("style", "width:900px;");
-                obj_img.setAttribute("alt", "");
-                obj_img.id = str_chart_id;
-                if (obj_img !== null) { document.body.appendChild(obj_img);}
-            }
-        }
-    }    
-    
-    // For the reset button to see what tool had beec selected
-    if (!arr_select_tools.includes(str_selected_tool) && tmp_result_dates.length>0) {
-        arr_select_tools.push(str_selected_tool);    
+    if (document.getElementById('headline').textContent.split(' ')[3] === "Hierarchical" && document.getElementById("table_hpm")) {
+        var obj_log = document.getElementById("table_hpm");
+        obj_log.parentNode.removeChild(obj_log);
     }
-    //console.log(arr_select_tools);
     
-    showConfusionMatrix();
-    return;
+    reset();
 }
 
 function readTextFile(str_path_to_file) {
@@ -215,6 +146,80 @@ function readTextFile(str_path_to_file) {
     rawFile.send(null);
     
     return allText
+}
+
+// Resuls showing
+function showDecisionTreeImages() {
+    var tmp_result_dates = arr_select_dates.slice();
+    tmp_result_dates = tmp_result_dates.sort();
+    var str_selected_tool = (selectedTool.value);
+    
+    var str_model = String(document.getElementById('headline').textContent.split(' ')[0]); // 41, 20, 61 models
+    var str_log = "WSAW_CM/" + str_model + "/";
+
+    for (var i=0; i<tmp_result_dates.length; i++) {
+        var str_filename = "Daily_" + tmp_result_dates[i].substr(0,4) + "-" + tmp_result_dates[i].substr(4,2) + "-" + tmp_result_dates[i].substr(6,2) + "_" + str_selected_tool; //Daily_2020-07-14_WSAWC01 or Daily_2020-07-14_ALL_TOOL
+            
+        var str_lot_log = readTextFile(str_log+str_filename);
+        var arr_lot_record = str_lot_log.split('\n'); // 2020-07-01,WSAWB01,MJFK4AJ,0,0
+            
+        // Check Lot name for that date and record png path
+        for (var j=0; j<arr_lot_record.length; j++) {
+            if (j !== 0) {
+                var _str_selected_tool = "";
+                if (str_selected_tool === "ALL_TOOL") {
+                    _str_selected_tool = arr_lot_record[j].split(',')[1];
+                } else {
+                    _str_selected_tool = str_selected_tool;
+                }
+                var str_lot = arr_lot_record[j].split(',')[2];
+                var str_png_filename = tmp_result_dates[i] + "_" + _str_selected_tool + "_" + str_lot + "_" + str_model + "_NoFeedback.png";
+                if (str_lot !== undefined) {
+                    var str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_1";
+                    var check_exist = document.getElementById(str_chart_id);
+                    if (!check_exist) {
+                        var obj_img = document.createElement("IMG");
+                        obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
+                        obj_img.setAttribute("style", "width:900px;");
+                        obj_img.setAttribute("alt", "");
+                        obj_img.id = str_chart_id;
+                        if (obj_img !== null) { document.body.appendChild(obj_img);}
+                    } else {
+                        str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_2";
+                        check_exist = document.getElementById(str_chart_id);
+                        if (!check_exist) {
+                            var obj_img = document.createElement("IMG");
+                            obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
+                            obj_img.setAttribute("style", "width:900px;");
+                            obj_img.setAttribute("alt", "");
+                            obj_img.id = str_chart_id;
+                            if (obj_img !== null) { document.body.appendChild(obj_img);}
+                        } else {
+                            str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_3";
+                            check_exist = document.getElementById(str_chart_id);
+                            if (!check_exist) {
+                                var obj_img = document.createElement("IMG");
+                                obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
+                                obj_img.setAttribute("style", "width:900px;");
+                                obj_img.setAttribute("alt", "");
+                                obj_img.id = str_chart_id;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    if (str_selected_tool === "ALL_TOOL") {
+        arr_select_tools = wsaw_all_tools.slice();
+        return;
+    }
+    
+    if (!arr_select_tools.includes(str_selected_tool) && tmp_result_dates.length>0) {
+        arr_select_tools.push(str_selected_tool);    
+    }
+    
 }
 
 function re_shape_arr(arr_tmp) {
@@ -400,6 +405,182 @@ function showNCUResultsImages() {
     return
 }
 
+function getDefaultColorHPM(str_yyyymmdd, str_tool) {
+    var int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
+    if (parseInt(str_yyyymmdd) > int_today_value) { return  "";}
+    
+    var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Kmeans+Random
+    var str_yyyy_mm_dd = str_yyyymmdd.substring(0,4) + '-' + str_yyyymmdd.substring(4,6) + '-' + str_yyyymmdd.substring(6,8)//str_yyyymmdd[0:4] + str_yyyymmdd[4:6] + str_yyyymmdd[6:8];
+    var str_filename = 'Daily_' + str_yyyy_mm_dd + '_' + str_tool;
+    var str_log_path = "WSAW_CM/" + str_headline_model + '/' + str_filename;
+    //var str_log_path = "../" + str_headline_model + '/' + str_filename
+    
+    var str_all_test = readTextFile(str_log_path); // 2020-07-01,WSAWB01,MJFK4AJ,0,0
+    var arr_lot_record = str_all_test.split('\n');
+    var str_final_result = ""
+    if (arr_lot_record.length > 0) {
+        for (var i=1; i<arr_lot_record.length; i++) {
+            str_status = arr_lot_record[i].split(',')[3];
+            str_predict = arr_lot_record[i].split(',')[4];
+            
+            // HPM needed
+            if (str_cal_headline === "Hierarchical" && str_status==='1') {
+                return "bg-danger";
+            }
+            
+            // Supervised needed
+            // Single tool
+            if (str_tool !== 'ALL_TOOL') {
+                if (str_status==='0' && str_predict==='1') {
+                    str_final_result = "bg-warning"; 
+                } else if (str_status==='1' && str_predict==='0') {
+                    str_final_result = "bg-danger";
+                } else if (str_status==='1' && str_predict==='1') {
+                    str_final_result = "bg-success";
+                }
+            // ALL tools
+            } else {
+                if (str_status==='1') {
+                    str_final_result = "bg-danger";
+                }
+            }
+        }    
+    }
+    
+    //console.log(arr_lot_record[1]);
+    return str_final_result;
+}
+
+function selectAllDates() {
+    // Get the select month
+    var int_today_value = "";
+    
+    // Supervised
+    if (str_cal_headline === 'Supervised') {
+        int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
+    // Hierarchical
+    } else {
+        int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate())<10? '0'+(today.getDate()) : (today.getDate())));
+    }
+    var int_rest_days = 32 - new Date(parseInt(selectYear.value), parseInt(selectMonth.value), 32).getDate()//int_today_value % 100;
+    
+    // Select those dates which smaller than today
+    arr_select_dates = [];
+    var yyyy = selectYear.value.toString();
+    var mm = (parseInt(selectMonth.value)+1) < 10 ? ("0"+(parseInt(selectMonth.value)+1)) : (parseInt(selectMonth.value)+1).toString();
+    for (var i=1; i<=int_rest_days; i++) {
+        var dd = i < 10 ? ("0"+i) : (i.toString());
+        if (parseInt(yyyy+mm+dd) <= int_today_value) { arr_select_dates.push(yyyy+mm+dd);}
+    }
+    //console.log(arr_select_dates);
+    //console.log(32 - new Date(parseInt(selectYear.value), parseInt(selectMonth.value), 32).getDate());
+    
+    // Update calendar
+    showCalendar(currentMonth, currentYear);
+    showConfusionMatrix();
+    
+    return;
+}
+
+function showDailyThreatHPM() {
+    // Open file according user choosing
+    var tmp_result_dates = arr_select_dates.slice();
+    tmp_result_dates = tmp_result_dates.sort();
+    
+    // WSAW_HPM/41 or 20 or 61
+    var str_log_path = "WSAW_HPM/" + document.getElementById('headline').textContent.split(' ')[0] + "/";
+    
+    // HPM result table columns
+    var table_hpm = document.createElement('TABLE');
+    table_hpm.id = "table_hpm";
+    table_hpm.border = "3px #FFD382 dashed";
+    table_hpm.align = "center";
+            
+    var table_hpm_col = document.createElement('tbody');
+    table_hpm_col.id = "table_hpm_columns";
+    table_hpm_col.style.background = "#994C00";
+    table_hpm_col.style.fontSize = "4px";
+    table_hpm_col.style.color = "#ffffff";
+            
+    var tr_hpm_col = table_hpm_col.appendChild(document.createElement('tr'));
+    var arr_wsaw_hpm_col = ['Date'].concat(wsaw_all_tools);
+    for (var i=0; i<arr_wsaw_hpm_col.length; i++) {
+        var td_hpm_col = document.createElement('td');
+        td_hpm_col.style.width = '40px';
+
+        tr_hpm_col.appendChild(td_hpm_col);
+        var a_hpm_col = td_hpm_col.appendChild(document.createElement('b'));
+        if (i === 0) {
+            td_hpm_col.style.width = '150px';
+            a_hpm_col.innerText = "Date";
+        } else {
+            a_hpm_col.innerText = arr_wsaw_hpm_col[i].substr(4,6);
+        }
+    }
+    table_hpm.appendChild(table_hpm_col);
+    
+    // HPM result table
+    var table_hpm_result = document.createElement('tbody');
+    table_hpm_result.id = "table_hpm_result";
+    table_hpm_result.style.background = "#fffff";
+    table_hpm_result.style.fontSize = "4px";
+    table_hpm_result.style.color = "#000000";
+    
+    for (var i=0; i<tmp_result_dates.length; i++) {
+        // tmss_HPM_daily_20190914.log
+        var str_filename = "tmss_HPM_daily_" + tmp_result_dates[i] + ".log";
+        var str_hpm_msg = readTextFile(str_log_path+str_filename);
+        var str_threat_tools_msg = str_hpm_msg.split('\n')[5].split(' ');
+        var str_threat_tools = [];
+        // Screen threat tools
+        for (var j=0; j<str_threat_tools_msg.length; j++) {
+            var str_tool = str_threat_tools_msg[j].replace(',','');
+            if (wsaw_all_tools.includes(str_tool)) {
+                str_threat_tools.push(str_tool);
+            }
+        }
+        //console.log(str_threat_tools_msg); // ["	Potential", "threat", "tools:", "WSAWB03," ...
+        //console.log(str_threat_tools); // ["WSAWB03", "WSAWB04" ...
+        
+        // HPM Color showing
+        if (str_hpm_msg !== "") {
+            //console.log(str_hpm_msg);
+            var tr_hpm_res = table_hpm_result.appendChild(document.createElement('tr'));
+            for (var k=0; k<arr_wsaw_hpm_col.length; k++) {
+                var td_hpm_res = document.createElement('td');
+                td_hpm_res.style.width = '40px';
+                
+                tr_hpm_res.appendChild(td_hpm_res);
+                var a_hpm_col = td_hpm_res.appendChild(document.createElement('b'));
+                if (k === 0) { // Dates
+                    td_hpm_res.style.width = '150px';
+                    a_hpm_col.innerText = tmp_result_dates[i];
+                } else { // Tools
+                    // Is this tool stop in this day?
+                    var str_status_msg = getDefaultColorHPM(tmp_result_dates[i], wsaw_all_tools[k-1]);
+                    var bool_status_stop = (str_status_msg === "bg-danger" || str_status_msg === "bg-success") ? true : false;
+                    //console.log(tmp_result_dates[i] + ":" + str_status_msg);
+                    
+                    if (str_threat_tools.includes(arr_wsaw_hpm_col[k])) {
+                        if (bool_status_stop) {
+                            td_hpm_res.style.backgroundColor = '#66ff66';
+                        } else {
+                            td_hpm_res.style.backgroundColor = '#ff9933';
+                        }
+                    } else {
+                        if (bool_status_stop) { td_hpm_res.style.backgroundColor = '#ff3333';}
+                    }
+                }
+            }
+        }
+        
+    }
+    table_hpm.appendChild(table_hpm_result);
+    document.body.appendChild(table_hpm);
+    
+    return;
+}
+
 myGoButton.onclick = function() {
     var tmp_result_dates = arr_select_dates.slice();//We copy and keep the original array
     tmp_result_dates = tmp_result_dates.sort();
@@ -416,12 +597,15 @@ myGoButton.onclick = function() {
         //alert('NCU!');
         showNCUResultsImages();
     } else {
-        showResultsImages();
+        if (str_cal_headline === 'Supervised') {
+            showDecisionTreeImages();
+        } else if (str_cal_headline === 'Hierarchical') {
+            showDailyThreatHPM();
+        }
     }
 }
 
 function getDefaultColor(str_yyyymmdd) {
-        
     var int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
     if (parseInt(str_yyyymmdd) > int_today_value) { return  "";}
     
@@ -456,6 +640,8 @@ function getDefaultColor(str_yyyymmdd) {
 }
 
 function showConfusionMatrix() {
+    if (str_cal_headline === 'Hierarchical') { return;}
+    
     var table_cm = document.createElement("TABLE");
     var str_table_id = "table_cm";
     if (document.getElementById('tool').value === 'ALL_TOOL') {
@@ -571,7 +757,9 @@ function showCalendar(month, year) {
 
                 cell.id = str_key+_date;
                 let cellText = document.createTextNode(date);
-                let str_default_color = getDefaultColor(str_key+_date);
+                //let str_default_color = (str_cal_headline === 'Supervised') ? getDefaultColor(str_key+_date) : "";
+                let str_default_color = (str_cal_headline === 'Supervised') ? getDefaultColorHPM(str_key+_date, document.getElementById('tool').value) : "";
+
                 //console.log(str_default_color);
                 //The classes for background colors are: .bg-primary, .bg-success, .bg-info,
                 //.bg-warning, .bg-danger, .bg-secondary, .bg-dark and .bg-light.
@@ -658,6 +846,7 @@ function showCalendar(month, year) {
         tbl.appendChild(row); // appending each row into calendar body.
     }// Finished creating all cells
 }
+
 
 showCalendar(currentMonth, currentYear);
 showConfusionMatrix();
