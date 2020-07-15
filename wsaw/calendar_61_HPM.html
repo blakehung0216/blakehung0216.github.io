@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TMSS</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="icon" href="../img/gw_circle.png">
+    <link rel="stylesheet" href="../styles/bootstrap.min.css">
+    <link href="../styles/calendar_outline.css" rel="stylesheet" type="text/css">
+</head>
+<body id="body">
+    <br>
+    <h1 id='headline'>61 Features with Hierarchical Predict Mechanism</h1> 
+    
+    <!--Calendar Start-->
+    <div class="container col-sm-4 col-md-7 col-lg-4 mt-5">
+        <div class="card">
+            <h3 class="card-header" id="monthAndYear"></h3>
+            <!--Calendar-->
+            <table class="table table-bordered table-responsive-sm" id="calendar">
+                <thead>
+                <tr>
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                </tr>
+                </thead>
+
+                <tbody id="calendar-body"></tbody>
+            </table>
+            
+            <!--Button-->
+            <div class="form-inline">
+                <!--Previous Now Next Button-->
+                <button class="btn btn-outline-primary col-sm-4" id="previous" onclick="previous()">Previous</button>
+                <button class="btn btn-outline-primary col-sm-4" id="now" onclick="now()">Now</button>
+                <button class="btn btn-outline-primary col-sm-4" id="next" onclick="next()">Next</button>
+            </div>
+            <br/>
+            
+            <!--Selection-->
+            <form class="form-inline">
+                <label class="lead mr-2 ml-2" for="month">Jump To: </label>
+
+                <!--Tool Selection-->
+                <label for="tool"></label>
+                <!--
+                <select class="form-control col-sm-3" name="tool" id="tool" onchange="showConfusionMatrix()">
+                    <option value=WSAWB01>B01</option>
+                    <option value=WSAWB02>B02</option>
+                    <option value=WSAWB03>B03</option>
+                    <option value=WSAWB04>B04</option>
+                    <option value=WSAWB05>B05</option>
+                    <option value=WSAWB06>B06</option>
+                    <option value=WSAWB07>B07</option>
+                    <option value=WSAWB08>B08</option>
+                    <option value=WSAWB09>B09</option>
+                    <option value=WSAWB10>B10</option>
+                    <option value=WSAWB11>B11</option>
+                    <option value=WSAWB12>B12</option>
+                    <option value=WSAWB13>B13</option>
+                    <option value=WSAWB14>B14</option>
+                    <option value=WSAWB15>B15</option>
+                    <option value=WSAWB16>B16</option>
+                    <option value=WSAWB17>B17</option>
+                    <option value=WSAWB18>B18</option>
+                    <option value=WSAWB19>B19</option>
+                    <option value=WSAWB20>B20</option>
+                    <option value=WSAWB21>B21</option>
+                    <option value=WSAWC01>C01</option>
+                    <option value=ALL_TOOL>All tools</option>
+                </select> -->
+
+                <!--Month Selection-->
+                <select class="form-control col-sm-5" name="month" id="month" onchange="jump()">
+                    <option value=0>Jan</option>
+                    <option value=1>Feb</option>
+                    <option value=2>Mar</option>
+                    <option value=3>Apr</option>
+                    <option value=4>May</option>
+                    <option value=5>Jun</option>
+                    <option value=6>Jul</option>
+                    <option value=7>Aug</option>
+                    <option value=8>Sep</option>
+                    <option value=9>Oct</option>
+                    <option value=10>Nov</option>
+                    <option value=11>Dec</option>
+                </select>
+
+                <!--Year Selection-->
+                <label for="year"></label>
+                <select class="form-control col-sm-5" name="year" id="year" onchange="jump()">
+                    <option value=2019>2019</option>
+                    <option value=2020>2020</option>
+                </select>
+            </form>
+            
+            <!--Debug Message-->
+            <br/>
+            <p>Dates you select:</p>
+            <p id='demo'></p>
+            
+            <!--Button Go-->
+            <br/>
+            <button class="btn btn-outline-primary col-sm-15" id="btn_clr" >Reset</button>
+            <button class="btn btn-outline-primary col-sm-15" id="btn_select_all" onclick="selectAllDates()">Select All Dates in This Month</button>
+            <button class="btn btn-outline-primary col-sm-15" id="btn_go">Show Results</button>
+            <!--Debug-->
+            <p id="str_select"></p>
+
+        </div>
+    </div>    
+    <script defer src="../scripts/calendar_scripts.js"></script>
+    <br>
+    <!--Calenda    End-->
+    
+</body>
+</html>
