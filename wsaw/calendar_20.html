@@ -10,11 +10,11 @@
     <link rel="stylesheet" href="../styles/bootstrap.min.css">
     <link href="../styles/calendar_outline.css" rel="stylesheet" type="text/css">
 </head>
-
 <body id="body">
     <br>
     <h1 id='headline'>20 Features with Supervised Algorithm Results</h1> 
     
+    <!--Calendar Start-->
     <div class="container col-sm-4 col-md-7 col-lg-4 mt-5">
         <div class="card">
             <h3 class="card-header" id="monthAndYear"></h3>
@@ -111,6 +111,7 @@
             <!--Button Go-->
             <br/>
             <button class="btn btn-outline-primary col-sm-15" id="btn_clr" >Reset</button>
+            <button class="btn btn-outline-primary col-sm-15" id="btn_select_all" onclick="selectAllDates()">Select All Dates in This Month</button>
             <button class="btn btn-outline-primary col-sm-15" id="btn_go">Show Results</button>
             <!--Debug-->
             <p id="str_select"></p>
@@ -119,7 +120,7 @@
     </div>    
     <script defer src="../scripts/calendar_scripts.js"></script>
     <br>
-    
+    <!--Calenda    End-->
     
 </body>
 </html>
