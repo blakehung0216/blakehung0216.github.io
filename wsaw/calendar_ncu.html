@@ -50,7 +50,6 @@
                 <!--Tool Selection-->
                 <label for="tool"></label>
                 <select class="form-control col-sm-3" name="tool" id="tool">
-                    <option value=ALL_TOOL>All tools</option>
                     <option value=WSAWB01>B01</option>
                     <option value=WSAWB02>B02</option>
                     <option value=WSAWB03>B03</option>
@@ -73,6 +72,7 @@
                     <option value=WSAWB20>B20</option>
                     <option value=WSAWB21>B21</option>
                     <option value=WSAWC01>C01</option>
+                    <option value=ALL_TOOL>All tools</option>
                 </select>
 
                 <!--Month Selection-->
@@ -110,6 +110,7 @@
             <!--Button Go-->
             <br/>
             <button class="btn btn-outline-primary col-sm-15" id="btn_clr" >Reset</button>
+            <button class="btn btn-outline-primary col-sm-15" id="btn_select_all" onclick="selectAllDates()">Select All Dates in This Month</button>
             <button class="btn btn-outline-primary col-sm-15" id="btn_go">Show Results</button>
             <!--Debug-->
             <p id="str_select"></p>

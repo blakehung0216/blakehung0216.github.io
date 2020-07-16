@@ -7,7 +7,7 @@ let myGoButton = document.getElementById('btn_go');
 let myResetButton = document.getElementById('btn_clr');
 let mySelect = document.getElementById('str_select');
 let selectedTool = document.getElementById('tool');
-let str_cal_headline = document.getElementById('headline').textContent.split(' ')[3] // Supervised or Hierarchical
+let str_cal_headline = document.getElementById('headline').textContent.split(' ')[3] // Supervised or Hierarchical or Unsupervised
 
 //let date_tr = document.querySelector('tr');
 let date_tbl = document.getElementById("calendar-body");
@@ -640,7 +640,7 @@ function getDefaultColor(str_yyyymmdd) {
 }
 
 function showConfusionMatrix() {
-    if (str_cal_headline === 'Hierarchical') { return;}
+    if (str_cal_headline !== 'Supervised') { return;}
     
     var table_cm = document.createElement("TABLE");
     var str_table_id = "table_cm";
