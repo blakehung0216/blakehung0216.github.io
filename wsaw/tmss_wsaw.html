@@ -23,7 +23,9 @@
             <li><a href="tmss_wsaw_roller_temp.html" target="_blank">Roller Temperature with Supervised Algorithm</a></li>
         </ul>
         
-        <p>You will see the similar graph like this: <img src=../img/wsaw_img_intro/calendar_color.png width="400"> The calendar result showing introduction:</p>
+        <h2>Introduction</h2>
+        <h3>(41 Features, 61 Features, 20 Features supervised models)</h3>
+        <p>For the Daily report option, you will see the similar graph like this: <img src=../img/wsaw_img_intro/calendar_color.png width="400">There is one table show the monthly <a href="https://en.wikipedia.org/wiki/Confusion_matrix" target="_blank">confusion matrix</a> value:</p>
         
         <!--Confusion Matrix-->
         <table align="center">
@@ -33,14 +35,13 @@
                 <th width='312'><font size="4">Actual</font></th>
             </tr>
         </table>
-        
         <table align="center">
             <tr align="center">
                 <th><font size="4">Predict</font></th>
                 <td>
                     <table align="center">
                         <tr align="center">
-                            <td width='150px' bgcolor='green'><font size="4">True Positive</font></td><td width='150px' bgcolor='orange'><font size="4">False Negative</font></td>
+                            <td width='150px' bgcolor='green'><font size="4">True Positive</font></td><td width='150px' bgcolor='orange'><font size="4">False Positive</font></td>
                         </tr>
                         <tr align="center">
                             <td width='150px' bgcolor='red'><font size="4">False Negative</font></td><td width='150px'><font size="4">True Negative</font></td>
@@ -49,9 +50,15 @@
                 </td>
             </tr>
         </table>
+        
+        <ul>
+            <li><b>Catch Rate</b> = (<font  color="#66aa66">True Positive</font>) / [(<font color="#66aa66">True Positive)</font> + (<font color="#ff3333">False Negative</font>)]</li>
+            <li><b>False Alarm</b> = (<font color="#FF8000">False Positive</font>) / [(True Negative) + (<font color="#FF8000">False Positive</font>)]</li>
+            <li><b>Accuracy</b> = [(<font color="#66aa66">True Positive)</font> + (<font color="#FF8000">False Positive</font>)] / [(<font color="#66aa66">True Positive</font>) + (True Negative) + (<font color="#ff3333">False Negative</font>) + (<font color="#FF8000">False Positive</font>)]</li>
+        </ul>
 
         
-        <p>After you select dates and click '<b>Show Result</b>', you would see the similar chart. Here you should know what the label and what is that chart legends:
+        <p>After you select dates and click '<b>Show Results</b>', you would see the similar chart. Here you should know what the label and what is that chart legends:
         <img src="../img/wsaw_img_intro/demo.png" width='800'>
         Chart result tile contains tool name, lot ID and the pre-alarm mechanism we use in this model. In above example, we choose "WSAWB01", on 2020-06-07 (We check the move out time for this lot).
         </p>
@@ -59,14 +66,18 @@
         <ul>
             <li><font color="#cc0000">Predict Chart</font> - This line shows the predict line from out predict model</li>
             <li><font color="#0033cc">3 Weeks Average</font> - This line show the average predict results for previous three weeks</li>
-            <li><font color="#b3b3cc">90%</font> - This line show the 90% binomial distrubution upper line</li>
-            <li><font color="#cc9900">95%</font> - This line show the 95% binomial distrubution upper line</li>
+            <li><font color="#b3b3cc">90%</font><font color="#cccccc"> - This line show the 90% binomial distrubution upper line (We do not check this value anymore since 2020-07)</font></li>
+            <li><font color="#cc9900">95%</font><font color="#cccccc"> - This line show the 95% binomial distrubution upper line (We do not check this value anymore since 2020-07)</font></li>
             <li><font color="#00e6e6">99%</font> - This line show the 99% binomial distrubution upper line</li>
             <li><font color="#ff0000"><b>Actual B/S</b></font> - This line will exist when there is a real B/S situation</li>
             <li><font color="#6600ff"><b>TMSS PI-Alarm</b></font> - This line will exist when <font color="#cc0000">Predict</font> line is above <font color="#00e6e6">99%</font> line</li>
         </ul>
+        <p>As for the other option is <b><font color="ff3333">"HPM results"</font></b>. It will show the deeper prediction analysis by using <b>Hierarchical Prediction Mechanism</b>, whose basic principle is to use the same production environment to judge whether if there exists the potential B/S threat. For example, when you select the dates you wanna to see, let's say "2020-07-16", then you would see the similar table:</p>
+        <img src="../img/wsaw_img_intro/hpm.png" width='1000'>
+        <p>This table means at the date 2020-07-16, those products finished on 2020-07-15 have more "PI-Alarm" comparing to similar production environment in those tools, in this case, WSAWB01, WSAWB03, WSAWB05, WSAWB09, WSAWB16 and WSAWB17.</p>
         
         <br>
+        <h3>(NCU prediction unsupervised algorithm)</h3>
         <!--NCU information-->
         <p>As for the NCU result, you will see the similar table:</p>
         <img src="../img/wsaw_img_intro/demo_ncu.png" width='1000'>
