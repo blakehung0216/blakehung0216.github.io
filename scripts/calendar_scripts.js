@@ -456,7 +456,7 @@ function selectAllDates() {
     var int_today_value = "";
     
     // Supervised
-    if (str_cal_headline === 'Supervised') {
+    if (str_cal_headline === 'Supervised' || str_cal_headline === 'Unsupervised') {
         int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
     // Hierarchical
     } else {
