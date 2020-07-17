@@ -7,7 +7,7 @@ let myGoButton = document.getElementById('btn_go');
 let myResetButton = document.getElementById('btn_clr');
 let mySelect = document.getElementById('str_select');
 let selectedTool = document.getElementById('tool');
-let str_cal_headline = document.getElementById('headline').textContent.split(' ')[3] // Supervised or Hierarchical or Unsupervised
+let str_cal_headline = document.getElementById('headline').textContent.split(' ')[3] // Supervised or Hierarchical or Machine
 
 //let date_tr = document.querySelector('tr');
 let date_tbl = document.getElementById("calendar-body");
@@ -95,23 +95,6 @@ function reset() {
     return;
 }
 
-function scrollFunction() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        myTopButton.style.display = "block";
-    } else {
-        myTopButton.style.display = "none";
-    }
-}
-
-function topFunction() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
-
-function homeFunction() {
-    location.href = "tmss_wsaw.html";
-}
-
 myResetButton.onclick = function() {
     // Clear Charts
     var tmp_result_dates = arr_select_dates.slice();
@@ -122,7 +105,7 @@ myResetButton.onclick = function() {
     //console.log(tmp_result_dates);
     
     for (var k=0; k<arr_select_tools.length; k++) {
-        if (document.getElementById('headline').textContent.split(' ')[0] !== "Kmeans+Random") {
+        if (document.getElementById('headline').textContent.split(' ')[0] !== "Representation") {
             for (var i=0; i<tmp_result_dates.length; i++) {
                 for (var j=1; j<4; j++) {
                     var obj_img = document.getElementById("charts_"+tmp_result_dates[i]+"_"+arr_select_tools[k]+"_"+j.toString());
@@ -426,7 +409,7 @@ function getDefaultColorHPM(str_yyyymmdd, str_tool) {
     var int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
     if (parseInt(str_yyyymmdd) > int_today_value) { return  "";}
     
-    var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Kmeans+Random
+    var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Representation
     var str_yyyy_mm_dd = str_yyyymmdd.substring(0,4) + '-' + str_yyyymmdd.substring(4,6) + '-' + str_yyyymmdd.substring(6,8)//str_yyyymmdd[0:4] + str_yyyymmdd[4:6] + str_yyyymmdd[6:8];
     var str_filename = 'Daily_' + str_yyyy_mm_dd + '_' + str_tool;
     var str_log_path = "WSAW_CM/" + str_headline_model + '/' + str_filename;
@@ -473,7 +456,7 @@ function selectAllDates() {
     var int_today_value = "";
     
     // Supervised
-    if (str_cal_headline === 'Supervised' || str_cal_headline === 'Unsupervised') {
+    if (str_cal_headline === 'Supervised' || str_cal_headline === 'Machine') {
         int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
     // Hierarchical
     } else {
@@ -539,7 +522,7 @@ function showDailyThreatHPM() {
     // HPM result table
     var table_hpm_result = document.createElement('tbody');
     table_hpm_result.id = "table_hpm_result";
-    table_hpm_result.style.background = "#fffff";
+    table_hpm_result.style.background = "#ffffff";
     table_hpm_result.style.fontSize = "4px";
     table_hpm_result.style.color = "#000000";
     
@@ -578,6 +561,10 @@ function showDailyThreatHPM() {
                     var bool_status_stop = (str_status_msg === "bg-danger" || str_status_msg === "bg-success") ? true : false;
                     //console.log(tmp_result_dates[i] + ":" + str_status_msg);
                     
+                    // Id
+                    td_hpm_res.id = tmp_result_dates[i] + "_" + wsaw_all_tools[k-1];
+                    
+                    // Color the td
                     if (str_threat_tools.includes(arr_wsaw_hpm_col[k])) {
                         if (bool_status_stop) {
                             td_hpm_res.style.backgroundColor = '#66ff66';
@@ -586,6 +573,10 @@ function showDailyThreatHPM() {
                         }
                     } else {
                         if (bool_status_stop) { td_hpm_res.style.backgroundColor = '#ff3333';}
+                    }
+                    
+                    // Make td clickable and functionalized
+                    td_hpm_res.onclick = function() {
                     }
                 }
             }
@@ -610,7 +601,7 @@ myGoButton.onclick = function() {
     //console.log(arr_select_dates);
     
     // Show images
-    if (document.getElementById('headline').textContent.split(' ')[0] === "Kmeans+Random") {
+    if (document.getElementById('headline').textContent.split(' ')[0] === "Representation") {
         //alert('NCU!');
         showNCUResultsImages();
     } else {
@@ -626,7 +617,7 @@ function getDefaultColor(str_yyyymmdd) {
     var int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
     if (parseInt(str_yyyymmdd) > int_today_value) { return  "";}
     
-    var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Kmeans+Random
+    var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Representation
     var str_yyyy_mm_dd = str_yyyymmdd.substring(0,4) + '-' + str_yyyymmdd.substring(4,6) + '-' + str_yyyymmdd.substring(6,8)//str_yyyymmdd[0:4] + str_yyyymmdd[4:6] + str_yyyymmdd[6:8];
     var str_filename = 'Daily_' + str_yyyy_mm_dd + '_' + document.getElementById('tool').value;
     var str_log_path = "WSAW_CM/" + str_headline_model + '/' + str_filename;
@@ -671,7 +662,7 @@ function showConfusionMatrix() {
         currentMonth = parseInt(selectMonth.value) + 1;
         currentMonth = currentMonth<10 ? ('0'+currentMonth) : (currentMonth.toString());
         if (currentYear !== '' && currentMonth !== '') {
-            var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Kmeans+Random
+            var str_headline_model = document.getElementById('headline').textContent.split(' ')[0]; // 41, 20, 61, Representation
             var str_filename = 'CM_' + currentYear + '-' + currentMonth + '_' + document.getElementById('tool').value; //CM_2020-01_WSAWB01
             var str_log_path = "WSAW_CM/" + str_headline_model + '/' + str_filename
             //var str_log_path = "../" + str_headline_model + '/' + str_filename
@@ -865,8 +856,28 @@ function showCalendar(month, year) {
 }
 
 
+// HPM Pop-out window
+
+
 // Top button & Home Button
-// Top
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        myTopButton.style.display = "block";
+    } else {
+        myTopButton.style.display = "none";
+    }
+}
+
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+function homeFunction() {
+    location.href = "tmss_wsaw.html";
+}
+
+    // Top
 window.onscroll = function() {scrollFunction()};
 var btn_top = document.createElement("BUTTON");
 btn_top.id = "btn_top";
@@ -876,7 +887,7 @@ btn_top.onclick = function() {
 }
 document.body.appendChild(btn_top);
 let myTopButton = document.getElementById("btn_top");
-// Home
+    // Home
 var btn_home = document.createElement("BUTTON");
 btn_home.id = "btn_home";
 btn_home.innerHTML = "Back"
