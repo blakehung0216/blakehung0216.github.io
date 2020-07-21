@@ -16,7 +16,8 @@
         <h2>Prediction Results</h2>
         <p>Here are all the prediction results we have:</p>-->
         
-        <h2>View Predict Results: Please select one of prediction model</h2>
+        <h2>View Predict Results</h2>
+        <p>Please select one of prediction model:</p>
         <ul>
             <li><a href="tmss_wsaw_41.html" target="_blank">41 Features</a></li>
             <li><a href="tmss_wsaw_61.html" target="_blank">61 Features</a></li>
@@ -25,8 +26,8 @@
             <li><a href="tmss_wsaw_roller_temp.html" target="_blank">Main roller temperature anomaly prediction (NEW, under construction)</a></li>
         </ul>
         
-        <!--<h2>Introduction</h2>
-        <h3>(41 Features, 61 Features, 20 Features supervised models)</h3>-->
+        <h2>Instruction</h2>
+        <h3>(41 Features, 61 Features, 20 Features models)</h3>
         <p>Desctiption : How to operate and what contents does display provide <img src=../img/wsaw_img_intro/calendar_color.png width="400">There is one table show the monthly <a href="https://en.wikipedia.org/wiki/Confusion_matrix" target="_blank">confusion matrix</a> value:</p>
         
         <!--Confusion Matrix-->
@@ -72,11 +73,13 @@
             <li><font color="#cc9900">95%</font><font color="#cccccc"> - This line show the 95% binomial distrubution upper line (We do not check this value anymore since 2020-07)</font></li>
             <li><font color="#00e6e6">99%</font> - This line show the 99% binomial distrubution upper line</li>
             <li><font color="#ff0000"><b>Actual B/S</b></font> - This line will exist when there is a real B/S situation</li>
-            <li><font color="#6600ff"><b>TMSS PI-Alarm</b></font> - This line will exist when <font color="#cc0000">Predict</font> line is above <font color="#00e6e6">99%</font> line</li>
+            <li><font color="#6600ff"><b>TMSS PI-Alarm</b></font> - This line will exist when <font color="#cc0000">Predict Chart</font> line is above <font color="#00e6e6">99%</font> line</li>
         </ul>
         <p>As for the other option is <b><font color="ff3333">"HPM results"</font></b>. It will show the deeper prediction analysis by using <b>Hierarchical Prediction Mechanism</b>, whose basic principle is to use the same production environment to judge whether if there exists the potential B/S threat. For example, when you select the dates you wanna to see, let's say "2020-07-16", then you would see the similar table:</p>
         <img src="../img/wsaw_img_intro/hpm.png" width='1000'>
-        <p>This table means at the date 2020-07-16, those products finished on 2020-07-15 have more "PI-Alarm" comparing to similar production environment in those tools, in this case, WSAWB01, WSAWB03, WSAWB05, WSAWB09, WSAWB16 and WSAWB17.</p>
+        <p>This table means at the date 2020-07-16, those products finished on 2020-07-15 have more "PI-Alarm" comparing to similar production environment in those tools, in this case, WSAWB01, WSAWB03, WSAWB05, WSAWB09, WSAWB16 and WSAWB17. Furthermore, to see why the table is color-changed we also add the function in this table. Let's say we click 'B09' at '2020-07-16', you might see the similar table:</p>
+        <img src="../img/wsaw_img_intro/hpm_raw_result.png" width='1000'>
+        <p>This table indicates the previous 15 products from 'B09'. As you can see at '2020-07-15', product-[<b>MICS4AA</b>] has 1 TMSS Pre-alarm, however, in the same environment, product-[<b>MHFY2AD</b>] has 0 TMSS Pre-alarm which triggers the HPM pre-alarm.</p>
         
         <br>
         <h3>(NCU prediction unsupervised algorithm)</h3>
@@ -89,7 +92,7 @@
             <li><font color="#66ff66"><b>Class0</b></font> and <font color="#66ff66"><b>Class1</b></font> - This indicates no any predict abnormality</li>
             <li><font color="#b2ff66"><b>Class2</b></font> - This still indicates no any predict anomly, but risk higher than Class1</li>
             <li><font color="#ffff66"><b>Class3</b></font> - This indicates a normal, keep raising might triger predict pre-alarm</li>
-            <li><font color="#ffb266"><b>Class4</b></font> and <font color="#ff6666"><b>Class5</b></font> - This indicates dangerous predict results, might need to check the tool status ot take actions</li>
+            <li><font color="#ffb266"><b>Class4</b></font> and <font color="#ff6666"><b>Class5</b></font> - This indicates dangerous predict results, might need to check the tool status or take actions</li>
         </ul>
         <br>
         
