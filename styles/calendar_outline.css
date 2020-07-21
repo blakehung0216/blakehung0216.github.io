@@ -27,6 +27,49 @@ img {
     margin: 0 auto;
 }
 
+
+#hpm_raw_result {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 7px;
+}
+
+#hpm_raw_result td, #hpm_raw_result th {
+    text-align: center;
+    padding: 8px;
+    border-radius: 7px;
+    font-size: 15px;
+    color: #595959;
+}
+
+#hpm_raw_result tr:nth-child(even) {
+    background-color: #e6ffff;
+}
+
+#hpm_raw_result tr:nth-child(odd) {
+    background-color: #cccccc;
+}
+
+#hpm_raw_result td:hover {
+    background-color: #ff0000;
+    color: white;
+}
+
+#hpm_raw_result th {
+    padding-top: 5px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #00ffff;
+    border-radius: 7px;
+}
+
+#hpm_raw_result th:hover {
+   background-color: #ff0000;
+   color: white;
+}
+
+
 table {
     text-align: center;
     font-size: 13px;
@@ -62,4 +105,28 @@ table {
   cursor: pointer;
   padding: 15px;
   border-radius: 4px;
+}
+
+#hpm_modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    padding-top: 100px; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.8);
+}
+
+#hpm_modal-content {
+    background-color: #ccffff;;
+    margin-bottom: 150px;
+    margin-left: 145px;
+    padding: 5px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 10px;
 }

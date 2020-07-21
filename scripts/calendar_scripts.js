@@ -110,7 +110,7 @@ myResetButton.onclick = function() {
                 for (var j=1; j<4; j++) {
                     var obj_img = document.getElementById("charts_"+tmp_result_dates[i]+"_"+arr_select_tools[k]+"_"+j.toString());
                     if (obj_img) {
-                        obj_img.parentNode.removeChild(obj_img);    
+                        obj_img.parentNode.removeChild(obj_img);
                     }
                 }
             }
@@ -563,6 +563,7 @@ function showDailyThreatHPM() {
                     
                     // Id
                     td_hpm_res.id = tmp_result_dates[i] + "_" + wsaw_all_tools[k-1];
+                    var str_td_id = tmp_result_dates[i] + "_" + wsaw_all_tools[k-1];
                     
                     // Color the td
                     if (str_threat_tools.includes(arr_wsaw_hpm_col[k])) {
@@ -577,6 +578,71 @@ function showDailyThreatHPM() {
                     
                     // Make td clickable and functionalized
                     td_hpm_res.onclick = function() {
+                        var str_id = this.id;
+                        //console.log(str_id);
+                        if (!document.getElementById('hpm_modal')) {
+                            var obj_modal = document.createElement('div');
+                            obj_modal.classList.add('modal');
+
+                            var obj_child = document.createElement('div');
+                            obj_child.classList.add('modal-content');
+                            obj_child.id = "hpm_modal-content";
+                            
+                            // Content
+                            var str_hpm_file = str_log_path + "tmss_HPM_daily_" + str_id.split('_')[0] + ".log";
+                            var str_content = readTextFile(str_hpm_file);
+                            var _str_tool = str_id.split('_')[1];
+                            //var regxp_tool = new RegExp(_str_tool, 'g');
+                            //var regxp_tool = new RegExp(_str_tool + "\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)\n(.*)", 'g');
+                            var regxp_tool = new RegExp(_str_tool + "(\n(.*)){17}", 'g');
+                            //var regxp = //g;
+                            var match_array = str_content.match(regxp_tool);
+                            var str_raw_msg = match_array[0];
+                            str_raw_msg = str_raw_msg.replace(/ /g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/|/g, '');
+                            var arr_clean_raw = str_raw_msg.split('\t');
+                            //console.log(arr_clean_raw);
+                            
+                            // Create table to show the result
+                            if (str_raw_msg === "" || str_raw_msg === undefined) {
+                                obj_child.innerHTML = "No Result Found.";//str_id;
+                            } else {
+                                var table_raw = obj_child.appendChild(document.createElement('TABLE'));
+                                table_raw.id = "hpm_raw_result";
+                                //var obj_raw_head = table_raw.appendChild(document.createElement("HEAD"));
+                                //var table_raw_col = table_raw.appendChild(document.createElement('tbody'));
+                                //var table_raw_res = table_raw.appendChild(document.createElement('tbody'));
+                                
+                                var tr_raw_col = table_raw.appendChild(document.createElement('tr'));
+                                //var th_raw_col = tr_raw_col.appendChild(document.createElement('th'));
+                                
+                                var tr_raw_res = table_raw.appendChild(document.createElement('tr'));
+                                for (var l=1; l<arr_clean_raw.length; l++) {
+                                    // Column
+                                    if (l<=7) {
+                                        var obj_th = document.createElement('th');
+                                        obj_th.innerHTML = arr_clean_raw[l];
+                                        tr_raw_col.appendChild(obj_th);
+                                    // Results
+                                    } else {
+                                        if (l%7 === 1) {
+                                            tr_raw_res = table_raw.appendChild(document.createElement('tr'));
+                                        } //tr_raw_res.appendChild(document.createElement('td').appendChild(document.createTextNode(arr_clean_raw[l])));
+                                        var obj_td = document.createElement('td');
+                                        obj_td.innerHTML = arr_clean_raw[l];
+                                        tr_raw_res.appendChild(obj_td);
+                                    }
+                                }
+                                obj_child.appendChild(table_raw);
+                            }//*/
+                            //obj_child.innerHTML = arr_clean_raw;//str_id;
+                            //console.log(arr_clean_raw);
+
+                            obj_modal.appendChild(obj_child);
+                            obj_modal.id = "hpm_modal";
+                            obj_modal.style.display = "block";
+
+                            table_hpm.appendChild(obj_modal);
+                        }
                     }
                 }
             }
@@ -857,6 +923,15 @@ function showCalendar(month, year) {
 
 
 // HPM Pop-out window
+window.onclick = function(event) {
+    if (event.target === document.getElementById("hpm_modal")) {
+        //hpm_modal.style.display = "none";
+        var obj_hpm_modal = document.getElementById("hpm_modal");
+        if (obj_hpm_modal) {
+            obj_hpm_modal.parentNode.removeChild(obj_hpm_modal);
+        }
+    }
+}
 
 
 // Top button & Home Button
