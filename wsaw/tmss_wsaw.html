@@ -23,7 +23,7 @@
             <li><a href="tmss_wsaw_61.html" target="_blank">61 Features</a></li>
             <li><a href="tmss_wsaw_20.html" target="_blank">20 Features</a></li>
             <li><a href="tmss_wsaw_ncu.html" target="_blank">Representation Learning and Machine Learning methods (NCU)</a></li>
-            <li><a href="tmss_wsaw_roller_temp.html" target="_blank">Main roller temperature anomaly prediction (NEW, under construction)</a></li>
+            <li><a href="tmss_wsaw_roller_temp.html" target="_blank">Main roller temperature anomaly prediction</a></li>
         </ul>
         
         <h2>Instruction</h2>
@@ -62,7 +62,7 @@
 
         
         <p>After you select dates and click '<b>Show Results</b>', you would see the similar chart. Here you should know what the label and what is that chart legends:
-        <img src="../img/wsaw_img_intro/demo.png" width='800'>
+        <img src="../img/wsaw_img_intro/demo.png" width='1000'>
         Chart result tile contains tool name, lot ID and the pre-alarm mechanism we use in this model. In above example, we choose "WSAWB01", on 2020-06-07 (We check the move out time for this lot).
         </p>
         <p>Next, on the right hand side you will see a bunch of legends: </p>
@@ -82,7 +82,25 @@
         <p>This table indicates the previous 15 products from 'B09'. As you can see at '2020-07-15', product-[<b>MICS4AA</b>] has 1 TMSS Pre-alarm, however, in the same environment, product-[<b>MHFY2AD</b>] has 0 TMSS Pre-alarm which triggers the HPM pre-alarm.</p>
         
         <br>
-        <h3>(NCU prediction unsupervised algorithm)</h3>
+        <h3>(Main roller temperature anomaly prediction)</h3>
+        <p>After few discussions with our experts, we think that it could be more easier to say this tool had a potential threat by <b><font color='#dd0000'>certain cause</font></b> instead of using all the anomaly cases to do the prediction. In this model prediction, we choose <b><font color='#dd0000'>"Anomaly Temperature in Main Roller"</font></b>. Like the similar operation above, you'll see the calendar then choose the tool, date then see the results. One thing different is that there are some gate valve sensors not installed in [B01, B02, B03, B04, B08, C01]. As a result, these tools are not shown in the search bar.</p>
+        <p>Now, when you click tool/date to check result you should see the similar chart:</p>
+        <img src="../img/wsaw_img_intro/main_roller_case_result.png" width='1000'>
+        <p>First of all, the x-axis is the date time, from the lot move-in to move-out; There are two y-axises, left side the 'Case Classifier', as for the right side is the 'Healthy Status'. Here is the table explanation for 'Case Classifer' (case #6 has no training data yet):</p>
+        <table align='center'>
+            <tr><th width='50' bgcolor='#00aa00'>0</th>
+                <th width='50' bgcolor='#dd0000'>1</th>
+                <th width='50' bgcolor='#dd0000'>2</th>
+                <th width='50' bgcolor='#dd0000'>3</th>
+                <th width='50' bgcolor='#dd0000'>4</th>
+                <th width='50' bgcolor='#dd0000'>5</th>
+                <th width='50' bgcolor='#ffff00'>6</th></tr>
+            <tr align='center'> <td>Normal</td> <td>Mov1</td> <td>Mov2</td> <td>Mov3</td> <td>Fix2</td> <td>Fix3</td> <td>Fix1(N/A)</td> </tr>
+        </table>
+        <p>As for the 'Healthy Status', this axis shows the healthy  status accirding to our regression model, to confirm the potential threat might need both case selected in case classifier and low/drop curve of healthy stauts.</p>
+        
+        <br>
+        <h3>(Representation Learning and Machine Learning methods, NCU)</h3>
         <!--NCU information-->
         <p>As for the NCU result, you will see the similar table:</p>
         <img src="../img/wsaw_img_intro/demo_ncu.png" width='1000'>

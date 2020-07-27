@@ -15,6 +15,7 @@ let date_td = document.querySelector("td");
 
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let wsaw_all_tools = ["WSAWB01", "WSAWB02", "WSAWB03", "WSAWB04", "WSAWB05", "WSAWB06", "WSAWB07", "WSAWB08", "WSAWB09", "WSAWB10", "WSAWB11", "WSAWB12", "WSAWB13", "WSAWB14", "WSAWB15", "WSAWB16", "WSAWB17", "WSAWB18", "WSAWB19", "WSAWB20", "WSAWB21", "WSAWC01"];
+let wsaw_all_tools_mainRoller = ["WSAWB05", "WSAWB06", "WSAWB07", "WSAWB09", "WSAWB10", "WSAWB11", "WSAWB12", "WSAWB13", "WSAWB14", "WSAWB15", "WSAWB16", "WSAWB17", "WSAWB18", "WSAWB19", "WSAWB20", "WSAWB21"];
 let arr_ncu_columns = ["Move In Datetime", "TOOL", "LOT-ID", "Predict Result", "0", "30", "60", "90", "120", "150", "180", "210", "240", "270", "300", "330", "360", "390", "420", "450", "480", "510", "540", "570", "600", "630", "660", "690", "720", "750"];
 
 let arr_cm = ['Catch Rate', 'False Alarm', 'Accuracy'];
@@ -456,7 +457,7 @@ function selectAllDates() {
     var int_today_value = "";
     
     // Supervised
-    if (str_cal_headline === 'Supervised' || str_cal_headline === 'Machine') {
+    if (str_cal_headline === 'Supervised' || str_cal_headline === 'Machine' || str_cal_headline === 'with') {
         int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
     // Hierarchical
     } else {
@@ -655,6 +656,79 @@ function showDailyThreatHPM() {
     return;
 }
 
+function showMainRollerImages() {
+    var tmp_result_dates = arr_select_dates.slice();
+    tmp_result_dates = tmp_result_dates.sort();
+    var str_selected_tool = (selectedTool.value);
+    
+    var str_model = 'RollerTemp';
+    var str_log = "WSAW_CM/41/";
+
+    for (var i=0; i<tmp_result_dates.length; i++) {
+        var str_filename = "Daily_" + tmp_result_dates[i].substr(0,4) + "-" + tmp_result_dates[i].substr(4,2) + "-" + tmp_result_dates[i].substr(6,2) + "_" + str_selected_tool; //Daily_2020-07-14_WSAWC01 or Daily_2020-07-14_ALL_TOOL
+            
+        var str_lot_log = readTextFile(str_log+str_filename);
+        var arr_lot_record = str_lot_log.split('\n'); // 2020-07-01,WSAWB01,MJFK4AJ,0,0
+            
+        // Check Lot name for that date and record png path
+        for (var j=0; j<arr_lot_record.length; j++) {
+            if (j !== 0) {
+                var _str_selected_tool = "";
+                if (str_selected_tool === "ALL_TOOL") {
+                    _str_selected_tool = arr_lot_record[j].split(',')[1];
+                } else {
+                    _str_selected_tool = str_selected_tool;
+                }
+                var str_lot = arr_lot_record[j].split(',')[2];
+                var str_png_filename = tmp_result_dates[i] + "_" + _str_selected_tool + "_" + str_lot + "_" + str_model + ".png";
+                console.log(str_png_filename)
+                if (str_lot !== undefined) {
+                    var str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_1";
+                    var check_exist = document.getElementById(str_chart_id);
+                    if (!check_exist) {
+                        var obj_img = document.createElement("IMG");
+                        obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
+                        obj_img.setAttribute("style", "width:900px;");
+                        obj_img.setAttribute("alt", "");
+                        obj_img.id = str_chart_id;
+                        if (obj_img !== null) { document.body.appendChild(obj_img);}
+                    } else {
+                        str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_2";
+                        check_exist = document.getElementById(str_chart_id);
+                        if (!check_exist) {
+                            var obj_img = document.createElement("IMG");
+                            obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
+                            obj_img.setAttribute("style", "width:900px;");
+                            obj_img.setAttribute("alt", "");
+                            obj_img.id = str_chart_id;
+                            if (obj_img !== null) { document.body.appendChild(obj_img);}
+                        } else {
+                            str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_3";
+                            check_exist = document.getElementById(str_chart_id);
+                            if (!check_exist) {
+                                var obj_img = document.createElement("IMG");
+                                obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
+                                obj_img.setAttribute("style", "width:900px;");
+                                obj_img.setAttribute("alt", "");
+                                obj_img.id = str_chart_id;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    if (str_selected_tool === "ALL_TOOL") {
+        arr_select_tools = wsaw_all_tools_mainRoller.slice();
+        return;
+    }
+    
+    if (!arr_select_tools.includes(str_selected_tool) && tmp_result_dates.length>0) {
+        arr_select_tools.push(str_selected_tool);    
+    }
+}
+
 myGoButton.onclick = function() {
     var tmp_result_dates = arr_select_dates.slice();//We copy and keep the original array
     tmp_result_dates = tmp_result_dates.sort();
@@ -670,6 +744,8 @@ myGoButton.onclick = function() {
     if (document.getElementById('headline').textContent.split(' ')[0] === "Representation") {
         //alert('NCU!');
         showNCUResultsImages();
+    }else if (document.getElementById('headline').textContent.split(' ')[0] === "Main") {
+        showMainRollerImages();
     } else {
         if (str_cal_headline === 'Supervised') {
             showDecisionTreeImages();
@@ -715,6 +791,7 @@ function getDefaultColor(str_yyyymmdd) {
 
 function showConfusionMatrix() {
     if (str_cal_headline !== 'Supervised') { return;}
+    if (document.getElementById('headline').textContent.split(' ')[0] === 'Main') { return;}
     
     var table_cm = document.createElement("TABLE");
     var str_table_id = "table_cm";
