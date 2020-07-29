@@ -49,6 +49,7 @@ function Dictionary() {
 let monthAndYear = document.getElementById("monthAndYear");
 var arr_select_dates = [];
 let arr_select_tools = [];
+var arr_reset_objs = [];
 
 function next() {
     currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
@@ -96,7 +97,19 @@ function reset() {
     return;
 }
 
+function reset_main_roller() {
+    for (var i=0; i<arr_reset_objs.length; i++) {
+        var obj_img = document.getElementById(arr_reset_objs[i]);
+        if (obj_img) {
+            obj_img.parentNode.removeChild(obj_img);
+        }
+    }
+}
+
 myResetButton.onclick = function() {
+    // Roller
+    if (document.getElementById('headline').textContent.split(' ')[0] === 'Main') { reset_main_roller();}
+    
     // Clear Charts
     var tmp_result_dates = arr_select_dates.slice();
     tmp_result_dates = tmp_result_dates.sort();
@@ -466,7 +479,7 @@ function selectAllDates() {
     var int_rest_days = 32 - new Date(parseInt(selectYear.value), parseInt(selectMonth.value), 32).getDate()//int_today_value % 100;
     
     // Select those dates which smaller than today
-    arr_select_dates = [];
+    //arr_select_dates = [];
     var yyyy = selectYear.value.toString();
     var mm = (parseInt(selectMonth.value)+1) < 10 ? ("0"+(parseInt(selectMonth.value)+1)) : (parseInt(selectMonth.value)+1).toString();
     for (var i=1; i<=int_rest_days; i++) {
@@ -681,9 +694,9 @@ function showMainRollerImages() {
                 }
                 var str_lot = arr_lot_record[j].split(',')[2];
                 var str_png_filename = tmp_result_dates[i] + "_" + _str_selected_tool + "_" + str_lot + "_" + str_model + ".png";
-                console.log(str_png_filename)
+                //console.log(str_png_filename)
                 if (str_lot !== undefined) {
-                    var str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_1";
+                    var str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_" + str_lot;
                     var check_exist = document.getElementById(str_chart_id);
                     if (!check_exist) {
                         var obj_img = document.createElement("IMG");
@@ -691,28 +704,36 @@ function showMainRollerImages() {
                         obj_img.setAttribute("style", "width:900px;");
                         obj_img.setAttribute("alt", "");
                         obj_img.id = str_chart_id;
+                        
+                        // Click show details, we need to fix the id problem -> Reset problem -> Here
+                        obj_img.onclick = function() {
+                            var str_id = this.id; // charts_20200727_WSAWB05_MFF2UAB
+                            var tool = str_id.split("_")[2];
+                            var date = str_id.split("_")[1];
+                            var lot = str_id.split("_")[3];
+                            var obj_modal = document.createElement('div');
+                            obj_modal.classList.add('modal');
+                            obj_modal.id = "roller_modal_modal";
+
+                            var obj_child = document.createElement('div');
+                            obj_child.classList.add('modal-content');
+                            obj_child.id = "roller_modal-content";
+
+                            var str_png_detail = date + '_' + tool + '_' + lot + '_Detail' + str_model + '.png';
+                            obj_img_roller_detail = document.createElement("IMG");
+                            //console.log("../img/WSAW_IMG/Roller_TEMP_Details/" + str_png_detail)
+                            obj_img_roller_detail.setAttribute("src", "../img/WSAW_IMG/Roller_TEMP_Details/" + str_png_detail);
+                            obj_img_roller_detail.setAttribute("style", "width:900px;");
+                            obj_img_roller_detail.setAttribute("alt", "");
+
+                            obj_child.appendChild(obj_img_roller_detail);
+                            obj_modal.appendChild(obj_child);
+                            obj_modal.style.display = "block";
+                            document.body.appendChild(obj_modal);
+                        } // Click end
+                        
                         if (obj_img !== null) { document.body.appendChild(obj_img);}
-                    } else {
-                        str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_2";
-                        check_exist = document.getElementById(str_chart_id);
-                        if (!check_exist) {
-                            var obj_img = document.createElement("IMG");
-                            obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
-                            obj_img.setAttribute("style", "width:900px;");
-                            obj_img.setAttribute("alt", "");
-                            obj_img.id = str_chart_id;
-                            if (obj_img !== null) { document.body.appendChild(obj_img);}
-                        } else {
-                            str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_3";
-                            check_exist = document.getElementById(str_chart_id);
-                            if (!check_exist) {
-                                var obj_img = document.createElement("IMG");
-                                obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
-                                obj_img.setAttribute("style", "width:900px;");
-                                obj_img.setAttribute("alt", "");
-                                obj_img.id = str_chart_id;
-                            }
-                        }
+                        arr_reset_objs.push(str_chart_id);
                     }
                 }
             }
@@ -1001,12 +1022,9 @@ function showCalendar(month, year) {
 
 // HPM Pop-out window
 window.onclick = function(event) {
-    if (event.target === document.getElementById("hpm_modal")) {
-        //hpm_modal.style.display = "none";
-        var obj_hpm_modal = document.getElementById("hpm_modal");
-        if (obj_hpm_modal) {
-            obj_hpm_modal.parentNode.removeChild(obj_hpm_modal);
-        }
+    if (event.target === document.getElementById("hpm_modal") || event.target === document.getElementById("roller_modal_modal")) {
+        var obj_modal = event.target;
+        obj_modal.parentNode.removeChild(obj_modal);
     }
 }
 

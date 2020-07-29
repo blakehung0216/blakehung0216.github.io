@@ -107,7 +107,7 @@ table {
   border-radius: 4px;
 }
 
-#hpm_modal {
+#hpm_modal, #roller_modal_modal {
     display: none; 
     position: fixed; 
     z-index: 1; 
@@ -121,7 +121,7 @@ table {
     background-color: rgba(0,0,0,0.8);
 }
 
-#hpm_modal-content {
+#hpm_modal-content, #roller_modal-content {
     background-color: #ccffff;;
     margin-bottom: 150px;
     margin-left: 145px;
