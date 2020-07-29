@@ -97,7 +97,7 @@ function reset() {
     return;
 }
 
-function reset_main_roller() {
+function reset_objs() {
     for (var i=0; i<arr_reset_objs.length; i++) {
         var obj_img = document.getElementById(arr_reset_objs[i]);
         if (obj_img) {
@@ -108,36 +108,25 @@ function reset_main_roller() {
 
 myResetButton.onclick = function() {
     // Roller
-    if (document.getElementById('headline').textContent.split(' ')[0] === 'Main') { reset_main_roller();}
+    if (document.getElementById('headline').textContent.split(' ')[0] === 'Main') { reset_objs();}
     
-    // Clear Charts
+    // 41,61,20,HPM
+    if (str_cal_headline === 'Supervised') {
+        reset_objs();
+        reset();
+    } else if (str_cal_headline === 'Hierarchical' && document.getElementById("table_hpm")) {
+        var obj_log = document.getElementById("table_hpm");
+        obj_log.parentNode.removeChild(obj_log);
+    }
+    
+    // NCU
     var tmp_result_dates = arr_select_dates.slice();
     tmp_result_dates = tmp_result_dates.sort();
-    //var str_selected_tool = (selectedTool.value);
-    
-    //console.log(arr_select_tools);
-    //console.log(tmp_result_dates);
-    
-    for (var k=0; k<arr_select_tools.length; k++) {
-        if (document.getElementById('headline').textContent.split(' ')[0] !== "Representation") {
-            for (var i=0; i<tmp_result_dates.length; i++) {
-                for (var j=1; j<4; j++) {
-                    var obj_img = document.getElementById("charts_"+tmp_result_dates[i]+"_"+arr_select_tools[k]+"_"+j.toString());
-                    if (obj_img) {
-                        obj_img.parentNode.removeChild(obj_img);
-                    }
-                }
-            }
-        } else {
-            // For table
+    if (document.getElementById('headline').textContent.split(' ')[0] === "Representation") {
+        for (var k=0; k<arr_select_tools.length; k++) {
             var obj_log = document.getElementById("table_" + arr_select_tools[k]);
             obj_log.parentNode.removeChild(obj_log);
         }
-    }
-    
-    if (document.getElementById('headline').textContent.split(' ')[3] === "Hierarchical" && document.getElementById("table_hpm")) {
-        var obj_log = document.getElementById("table_hpm");
-        obj_log.parentNode.removeChild(obj_log);
     }
     
     reset();
@@ -189,38 +178,17 @@ function showDecisionTreeImages() {
                 var str_lot = arr_lot_record[j].split(',')[2];
                 var str_png_filename = tmp_result_dates[i] + "_" + _str_selected_tool + "_" + str_lot + "_" + str_model + "_NoFeedback.png";
                 if (str_lot !== undefined) {
-                    var str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_1";
-                    var check_exist = document.getElementById(str_chart_id);
-                    if (!check_exist) {
+                    var str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_" + str_lot;
+                    if (!document.getElementById(str_chart_id)) {
                         var obj_img = document.createElement("IMG");
                         obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
                         obj_img.setAttribute("style", "width:900px;");
                         obj_img.setAttribute("alt", "");
                         obj_img.id = str_chart_id;
+                        arr_reset_objs.push(str_chart_id);
                         if (obj_img !== null) { document.body.appendChild(obj_img);}
-                    } else {
-                        str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_2";
-                        check_exist = document.getElementById(str_chart_id);
-                        if (!check_exist) {
-                            var obj_img = document.createElement("IMG");
-                            obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
-                            obj_img.setAttribute("style", "width:900px;");
-                            obj_img.setAttribute("alt", "");
-                            obj_img.id = str_chart_id;
-                            if (obj_img !== null) { document.body.appendChild(obj_img);}
-                        } else {
-                            str_chart_id = "charts_" + tmp_result_dates[i] + "_" + _str_selected_tool + "_3";
-                            check_exist = document.getElementById(str_chart_id);
-                            if (!check_exist) {
-                                var obj_img = document.createElement("IMG");
-                                obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
-                                obj_img.setAttribute("style", "width:900px;");
-                                obj_img.setAttribute("alt", "");
-                                obj_img.id = str_chart_id;
-                            }
-                        }
                     }
-                }
+                } // End if (str_lot !== undefined)
             }
         }
     }
@@ -723,7 +691,7 @@ function showMainRollerImages() {
                             obj_img_roller_detail = document.createElement("IMG");
                             //console.log("../img/WSAW_IMG/Roller_TEMP_Details/" + str_png_detail)
                             obj_img_roller_detail.setAttribute("src", "../img/WSAW_IMG/Roller_TEMP_Details/" + str_png_detail);
-                            obj_img_roller_detail.setAttribute("style", "width:900px;");
+                            obj_img_roller_detail.setAttribute("style", "width:700px;");
                             obj_img_roller_detail.setAttribute("alt", "");
 
                             obj_child.appendChild(obj_img_roller_detail);
