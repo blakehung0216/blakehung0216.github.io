@@ -79,6 +79,10 @@ function jump() {
     showConfusionMatrix();
 }
 
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 // Reset dates
 function reset() {
     // Clear select dates
@@ -201,7 +205,7 @@ function showDecisionTreeImages() {
     if (!arr_select_tools.includes(str_selected_tool) && tmp_result_dates.length>0) {
         arr_select_tools.push(str_selected_tool);    
     }
-    
+    return;
 }
 
 function re_shape_arr(arr_tmp) {
@@ -716,22 +720,22 @@ function showMainRollerImages() {
     if (!arr_select_tools.includes(str_selected_tool) && tmp_result_dates.length>0) {
         arr_select_tools.push(str_selected_tool);    
     }
+    return;
 }
 
-myGoButton.onclick = function() {
+myGoButton.onclick = (async function() {
+    document.body.style.cursor = 'progress';
+    await sleep(300);
     var tmp_result_dates = arr_select_dates.slice();//We copy and keep the original array
     tmp_result_dates = tmp_result_dates.sort();
     var str_db_msg = "";
     for (var i=0; i<tmp_result_dates.length; i++) {
         str_db_msg += tmp_result_dates[i] + ", "
     }
-    //alert(selectedTool.value+": "+str_db_msg); //dates sorting OK!
     document.getElementById("demo").innerHTML = str_db_msg;
-    //console.log(arr_select_dates);
     
     // Show images
     if (document.getElementById('headline').textContent.split(' ')[0] === "Representation") {
-        //alert('NCU!');
         showNCUResultsImages();
     }else if (document.getElementById('headline').textContent.split(' ')[0] === "Main") {
         showMainRollerImages();
@@ -742,7 +746,8 @@ myGoButton.onclick = function() {
             showDailyThreatHPM();
         }
     }
-}
+    document.body.style.cursor = 'default';
+})
 
 function getDefaultColor(str_yyyymmdd) {
     var int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
@@ -1035,6 +1040,10 @@ btn_home.onclick = function() {
 document.body.appendChild(btn_home);
 let myHomeButton = document.getElementById("btn_home");
 myHomeButton.style.display = "block";
+
+// Set cursor
+//document.body.style.cursor = 'progress';
+//window.onload = function() { document.body.style.cursor = 'default';}
 
 // Calendar
 showCalendar(currentMonth, currentYear);
