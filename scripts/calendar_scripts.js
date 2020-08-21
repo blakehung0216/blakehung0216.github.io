@@ -641,6 +641,53 @@ function showDailyThreatHPM() {
     return;
 }
 
+function _mainRollerRealtime(str_tool, str_today) {
+    var str_png_filename = "Realtime_" + str_tool + "__RollerTemp.png";
+    var str_chart_id = "realtime_" + str_today + "_" + str_tool;
+    if (!document.getElementById(str_chart_id)) {
+        var obj_img = document.createElement("IMG");
+        obj_img.setAttribute("src", "../img/WSAW_IMG/" + str_png_filename);
+        obj_img.setAttribute("style", "width:900px;");
+        obj_img.setAttribute("alt", "");
+        obj_img.id = str_chart_id;
+        
+        obj_img.onclick = function() {
+            var obj_modal = document.createElement('div');
+            obj_modal.classList.add('modal');
+            obj_modal.id = "roller_modal_modal";
+
+            var obj_child = document.createElement('div');
+            obj_child.classList.add('modal-content');
+            obj_child.id = "roller_modal-content";
+
+            var str_png_detail = "Realtime_" + str_tool + "__DetailRollerTemp.png";
+            obj_img_roller_detail = document.createElement("IMG");
+            //console.log("../img/WSAW_IMG/Roller_TEMP_Details/" + str_png_detail)
+            obj_img_roller_detail.setAttribute("src", "../img/WSAW_IMG/Roller_TEMP_Details/" + str_png_detail);
+            obj_img_roller_detail.setAttribute("style", "width:700px;");
+            obj_img_roller_detail.setAttribute("alt", "");
+
+            obj_child.appendChild(obj_img_roller_detail);
+            obj_modal.appendChild(obj_child);
+            obj_modal.style.display = "block";
+            document.body.appendChild(obj_modal);
+        } // Click end
+        
+        if (obj_img !== null) { document.body.appendChild(obj_img);}
+        arr_reset_objs.push(str_chart_id);
+    }
+}
+
+function mainRollerRealtime(str_tool, str_today) {
+    if (str_tool === "ALL_TOOL") {
+        for (var i=0; i<wsaw_all_tools_mainRoller.length; i++) {
+            _mainRollerRealtime(wsaw_all_tools_mainRoller[i], str_today);
+        }
+    } else {
+        _mainRollerRealtime(str_tool, str_today);
+    }
+}
+
 function showMainRollerImages() {
     var tmp_result_dates = arr_select_dates.slice();
     tmp_result_dates = tmp_result_dates.sort();
@@ -650,6 +697,21 @@ function showMainRollerImages() {
     var str_log = "WSAW_CM/41/";
 
     for (var i=0; i<tmp_result_dates.length; i++) {
+        // Realtime case
+        //console.log(today.getFullYear());
+        //console.log(today.getMonth()+1);
+        //console.log(today.getDate());
+        var yyyy = today.getFullYear().toString();
+        var mm = (today.getMonth()+1) < 10 ? ("0" + (today.getMonth()+1).toString()) : ((today.getMonth()+1).toString());
+        var dd = today.getDate().toString();
+        var str_today = yyyy+mm+dd;
+        //console.log(str_today);
+        if (tmp_result_dates[i] === str_today) {
+            mainRollerRealtime(str_selected_tool, today);
+            continue;
+        }
+        
+        
         var str_filename = "Daily_" + tmp_result_dates[i].substr(0,4) + "-" + tmp_result_dates[i].substr(4,2) + "-" + tmp_result_dates[i].substr(6,2) + "_" + str_selected_tool; //Daily_2020-07-14_WSAWC01 or Daily_2020-07-14_ALL_TOOL
             
         var str_lot_log = readTextFile(str_log+str_filename);
