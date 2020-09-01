@@ -703,7 +703,7 @@ function showMainRollerImages() {
         //console.log(today.getDate());
         var yyyy = today.getFullYear().toString();
         var mm = (today.getMonth()+1) < 10 ? ("0" + (today.getMonth()+1).toString()) : ((today.getMonth()+1).toString());
-        var dd = today.getDate().toString();
+        var dd = (today.getDate()) < 10 ? ("0" + (today.getDate()).toString()) : ((today.getDate()).toString());
         var str_today = yyyy+mm+dd;
         //console.log(str_today);
         if (tmp_result_dates[i] === str_today) {
