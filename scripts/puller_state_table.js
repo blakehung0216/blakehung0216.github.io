@@ -1,8 +1,8 @@
 
 var str_log_path = "log/";
 var arr_columnms = ['Tool', 'Ingot', 'Class', 'State', 'Length', 'LZD Detection'];
-var arr_online_tools = ['GJ'];
-var arr_all_tools = ["AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH", "DI", "DJ", "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH", "EI", "EJ", "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH", "FI", "FJ", "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH", "GI", "GJ", "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH", "HI", "HJ", "IA", "IB", "IC", "ID", "IE", "IF", "IG", "IH", "JA", "JB", "JC", "JD", "JE", "JF", "JG", "JH", "JJ"]
+var arr_online_tools = ['JC'];
+var arr_all_tools = ["JC", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH", "DI", "DJ", "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH", "EI", "EJ", "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH", "FI", "FJ", "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH", "GI", "GJ", "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH", "HI", "HJ", "IA", "IB", "IC", "ID", "IE", "IF", "IG", "IH", "JA", "JB", "JD", "JE", "JF", "JG", "JH", "JJ"]
 
 
 function readTextFile(str_path_to_file) {
@@ -84,13 +84,20 @@ function puller_tool_state(str_tool) {
 
         var str_allText = readTextFile(str_log_filename); //JH, MJHJ5, 300, MELTDOWN, 0, 
         var arr_table_result = str_allText.split(", ");
-        var str_lzd_result = lzd_detection_result(str_log_tool);
+        var str_lzd_result = "-1";
+        if (arr_online_tools.includes(arr_table_result[0])) {
+            str_lzd_result = lzd_detection_result(str_log_tool);
+            if (arr_table_result[3] !== "BODY") {str_lzd_result = "2";}
+        }
+        
         if (str_lzd_result === "0") {
-            arr_table_result[arr_table_result.length-1] = 'SAFE';
+            arr_table_result[arr_table_result.length-1] = 'OK';
         } else if (str_lzd_result === "1") {
-            arr_table_result[arr_table_result.length-1] = 'ALARM';
+            arr_table_result[arr_table_result.length-1] = 'NG';
+        } else if (str_lzd_result === "2") {
+            arr_table_result[arr_table_result.length-1] = 'STBY';
         } else { // "-1"
-            arr_table_result[arr_table_result.length-1] = 'No detection';
+            arr_table_result[arr_table_result.length-1] = '---';
         }
         
         var table_result = document.createElement('tbody');
@@ -101,11 +108,13 @@ function puller_tool_state(str_tool) {
             td_puller.style.fontSize = '15px';
             var cell_value = arr_table_result[j];
             
-            if (cell_value === 'SAFE') {
+            if (cell_value === 'OK') {
                 tr_puller.style.backgroundColor = '#66ff66';
-            } else if (cell_value === 'ALARM') {
+            } else if (cell_value === 'NG') {
                 tr_puller.style.backgroundColor = '#ff6666';
-            } else if (cell_value === 'No detection') {
+            } else if (cell_value === 'STBY') {
+                tr_puller.style.backgroundColor = '#ffff00';
+            } else if (cell_value === '---') {
                 tr_puller.style.backgroundColor = '#C0C0C0';
             }
             
