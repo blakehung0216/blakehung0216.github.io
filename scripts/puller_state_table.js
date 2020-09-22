@@ -62,7 +62,7 @@ function puller_tool_state(str_tool) {
     for (var i=0; i<arr_columnms.length; i++) {
         var td_ncu = document.createElement('td');
         if (i === 5) {
-            td_ncu.style.width = '200px';
+            td_ncu.style.width = '230px';
         } else {
             td_ncu.style.width = '150px';
         }
@@ -73,6 +73,19 @@ function puller_tool_state(str_tool) {
         a_ncu.innerText = arr_columnms[i];
     }
     table_lzd.appendChild(table_column);//*/
+    
+    var today = new Date();
+    var yyyy = today.getFullYear().toString();
+    var mm = (today.getMonth()+1<10) ? ("0"+(today.getMonth()+1)) : ((today.getMonth()+1).toString());
+    var dd = (today.getDate()<10) ? ("0"+today.getDate().toString()) : (today.getDate().toString());
+    var str_date = yyyy + "-" + mm + "-" + dd; // 2020-09-22
+    
+    var HH = (today.getHours()<10) ? ("0"+today.getHours().toString()) : (today.getHours().toString());
+    var MM = (today.getMinutes()<10) ? ("0"+today.getMinutes().toString()) : (today.getMinutes().toString());
+    var SS = (today.getSeconds()<10) ? ("0"+today.getSeconds().toString()) : (today.getSeconds().toString());
+    var str_time = HH + ":" + MM + ":" + SS; // 11:32:26
+        //today.getHours().toString() + ":" + today.getMinutes().toString() + ":" + today.getSeconds().toString();
+    //console.log(str_date + " " + str_time);
     
     // Add results
     for (var i=0; i<arr_all_tools.length; i++) {
@@ -112,6 +125,7 @@ function puller_tool_state(str_tool) {
                 tr_puller.style.backgroundColor = '#66ff66';
             } else if (cell_value === 'NG') {
                 tr_puller.style.backgroundColor = '#ff6666';
+                cell_value += ", " + str_date + ", " + str_time + ", 3";
             } else if (cell_value === 'STBY') {
                 tr_puller.style.backgroundColor = '#ffff00';
             } else if (cell_value === '---') {
