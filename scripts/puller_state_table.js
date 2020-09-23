@@ -1,5 +1,6 @@
 
 var str_log_path = "log/";
+var str_cvx_log_path = "cvx_log/";
 var arr_columnms = ['Tool', 'Ingot', 'Class', 'State', 'Length', 'LZD Detection'];
 var arr_online_tools = ['JC'];
 var arr_all_tools = ["JC", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH", "DI", "DJ", "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH", "EI", "EJ", "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH", "FI", "FJ", "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH", "GI", "GJ", "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH", "HI", "HJ", "IA", "IB", "IC", "ID", "IE", "IF", "IG", "IH", "JA", "JB", "JD", "JE", "JF", "JG", "JH", "JJ"]
@@ -25,8 +26,27 @@ function readTextFile(str_path_to_file) {
 }
 
 function lzd_detection_result(str_log_tool) {
+    //console.log("Detecting..." + str_log_tool);
     if (arr_online_tools.includes(str_log_tool)) {
-        return "0";
+        var str_log_filename = str_log_path + str_log_tool + '.log'; // log/JC.log
+        var str_allText = readTextFile(str_log_filename); // JC, MJCW1, 300, BODY, 170,
+        var str_lot = str_allText.split(", ")[1]; // MJCW1
+        var str_cvx_log_name = "PULLER_" + str_log_tool + "_" + str_lot;
+        var str_cvx_log_allText = readTextFile(str_cvx_log_path + str_cvx_log_name); // 2020-09-23 10:45:23, OK, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        arr_cvx_log = str_cvx_log_allText.split("\n");
+        var str_cvx_log_allText2 = arr_cvx_log[arr_cvx_log.length-2]; // Get the last message
+        //console.log(arr_cvx_log);
+        //console.log(str_cvx_log_allText2);
+        var str_OK_NG = str_cvx_log_allText2.split(", ")[1];
+        //console.log(str_OK_NG);
+        var arr_res = ["0", 4];
+        if (str_OK_NG != "OK"){
+            var arr_1_0 = str_cvx_log_allText2.split(", ");
+            var count_1 = 0;
+            for (var i=0; i<arr_1_0.length; i++) {if (arr_1_0[i] == "1") { count_1++; } }
+            arr_res = ["1", count_1];
+        }
+        return arr_res;
     } else {
         return "-1";
     }
@@ -98,10 +118,16 @@ function puller_tool_state(str_tool) {
         var str_allText = readTextFile(str_log_filename); //JH, MJHJ5, 300, MELTDOWN, 0, 
         var arr_table_result = str_allText.split(", ");
         var str_lzd_result = "-1";
+        var int_zd_count = 0;
         if (arr_online_tools.includes(arr_table_result[0])) {
-            str_lzd_result = lzd_detection_result(str_log_tool);
+            var arr_res = lzd_detection_result(str_log_tool);
+            str_lzd_result = arr_res[0];
+            int_zd_count = arr_res[1];
             if (arr_table_result[3] !== "BODY") {str_lzd_result = "2";}
         }
+        
+        //console.log(int_zd_count);
+        //console.log(str_lzd_result);
         
         if (str_lzd_result === "0") {
             arr_table_result[arr_table_result.length-1] = 'OK';
@@ -125,7 +151,7 @@ function puller_tool_state(str_tool) {
                 tr_puller.style.backgroundColor = '#66ff66';
             } else if (cell_value === 'NG') {
                 tr_puller.style.backgroundColor = '#ff6666';
-                cell_value += ", " + str_date + ", " + str_time + ", 3";
+                cell_value += ", " + str_date + ", " + str_time + ", " + int_zd_count.toString();
             } else if (cell_value === 'STBY') {
                 tr_puller.style.backgroundColor = '#ffff00';
             } else if (cell_value === '---') {
