@@ -34,12 +34,20 @@ function lzd_detection_result(str_log_tool) {
         var str_cvx_log_name = "PULLER_" + str_log_tool + "_" + str_lot;
         var str_cvx_log_allText = readTextFile(str_cvx_log_path + str_cvx_log_name); // 2020-09-23 10:45:23, OK, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         arr_cvx_log = str_cvx_log_allText.split("\n");
-        var str_cvx_log_allText2 = arr_cvx_log[arr_cvx_log.length-2]; // Get the last message
-        //console.log(arr_cvx_log);
-        //console.log(str_cvx_log_allText2);
-        var str_OK_NG = str_cvx_log_allText2.split(", ")[1];
-        //console.log(str_OK_NG);
+        
+        // We now check the last 30 minutes, if there is "OK" in this 30 minutes, then we say it is okay now
         var arr_res = ["0", 4];
+        var arr_cvx_log_30lines = arr_cvx_log.slice(Math.max(arr_cvx_log.length - 30, 1));
+        for (var i=0; i<arr_cvx_log_30lines.length-1; i++) {
+            var str_msg = arr_cvx_log_30lines[i];
+            var str_ng_ok = str_msg.split(", ")[1];
+            if (str_ng_ok == "OK") {
+                return arr_res;
+            }
+        }
+        
+        var str_cvx_log_allText2 = arr_cvx_log[arr_cvx_log.length-2]; // Get the last message
+        var str_OK_NG = str_cvx_log_allText2.split(", ")[1];
         if (str_OK_NG != "OK"){
             var arr_1_0 = str_cvx_log_allText2.split(", ");
             var count_1 = 0;
