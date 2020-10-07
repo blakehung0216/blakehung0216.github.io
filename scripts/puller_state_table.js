@@ -4,7 +4,14 @@ var str_cvx_log_path = "cvx_log/";
 var arr_columnms = ['Tool', 'Ingot', 'Class', 'State', 'Length', 'LZD Detection'];
 var arr_online_tools = ['JC'];
 var arr_all_tools = ["JC", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH", "DI", "DJ", "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH", "EI", "EJ", "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH", "FI", "FJ", "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH", "GI", "GJ", "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH", "HI", "HJ", "IA", "IB", "IC", "ID", "IE", "IF", "IG", "IH", "JA", "JB", "JD", "JE", "JF", "JG", "JH", "JJ"]
+var flag_ng = false;
+var int_ng_zd_count = 0;
+var str_ng_datetime = "";
 
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function readTextFile(str_path_to_file) {
     var rawFile = new XMLHttpRequest();
@@ -60,15 +67,8 @@ function lzd_detection_result(str_log_tool) {
     }
 }
 
-function puller_tool_state(str_tool) {
-    //var str_log_path = "log/"
-    //var str_log_tool = "JH";
-    var str_log_tool = str_tool;
-    var str_log_filename = str_log_path + str_log_tool + '.log';
-    
-    var str_allText = readTextFile(str_log_filename);
-    //console.log(str_allText);
-    
+async function puller_tool_state() {
+    while (true) {
     // Result result declear
     var table_lzd = document.createElement("TABLE");
     var str_table_id = "table_lzd_column";
@@ -138,7 +138,11 @@ function puller_tool_state(str_tool) {
         //console.log(str_lzd_result);
         
         if (str_lzd_result === "0") {
-            arr_table_result[arr_table_result.length-1] = 'OK';
+            if (flag_ng) {
+                arr_table_result[arr_table_result.length-1] = 'NG';
+            } else {
+                arr_table_result[arr_table_result.length-1] = 'OK';
+            }
         } else if (str_lzd_result === "1") {
             arr_table_result[arr_table_result.length-1] = 'NG';
         } else if (str_lzd_result === "2") {
@@ -159,7 +163,20 @@ function puller_tool_state(str_tool) {
                 tr_puller.style.backgroundColor = '#66ff66';
             } else if (cell_value === 'NG') {
                 tr_puller.style.backgroundColor = '#ff6666';
-                cell_value += ", " + str_date + ", " + str_time + ", " + int_zd_count.toString();
+                if (int_ng_zd_count == 0) {
+                    cell_value += ", " + str_date + " " + str_time + ", " + int_zd_count.toString();
+                    flag_ng = true;
+                    int_ng_zd_count = int_zd_count;
+                    str_ng_datetime = str_date + " " + str_time;
+                } else {
+                    cell_value += ", " + str_ng_datetime + ", " + int_ng_zd_count.toString();
+                }
+                
+                td_puller.onclick = function() {
+                    //document.execCommand('refresh');
+                    alert("Confirm no LZD?");
+                    history.go(0);
+                }
             } else if (cell_value === 'STBY') {
                 tr_puller.style.backgroundColor = '#ffff00';
             } else if (cell_value === '---') {
@@ -174,12 +191,12 @@ function puller_tool_state(str_tool) {
     
     
     document.body.appendChild(table_lzd);
+    
+    // Remove table
+    await sleep(5000);
+    table_lzd.parentNode.removeChild(table_lzd);
+    } // End while true
+    
 }
-
-
-//while (true) {
-//    puller_tool_state();
-//    await sleep(2000);
-//}
 
 puller_tool_state();
