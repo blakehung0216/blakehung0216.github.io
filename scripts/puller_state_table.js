@@ -35,15 +35,16 @@ function readTextFile(str_path_to_file) {
 function lzd_detection_result(str_log_tool) {
     //console.log("Detecting..." + str_log_tool);
     if (arr_online_tools.includes(str_log_tool)) {
+        var arr_res = ["0", 4];
         var str_log_filename = str_log_path + str_log_tool + '.log'; // log/JC.log
         var str_allText = readTextFile(str_log_filename); // JC, MJCW1, 300, BODY, 170,
         var str_lot = str_allText.split(", ")[1]; // MJCW1
+        if (str_allText.split(", ")[3] !== "BODY") {return ["2", 0];}
         var str_cvx_log_name = "PULLER_" + str_log_tool + "_" + str_lot;
         var str_cvx_log_allText = readTextFile(str_cvx_log_path + str_cvx_log_name); // 2020-09-23 10:45:23, OK, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         arr_cvx_log = str_cvx_log_allText.split("\n");
         
         // We now check the last 30 minutes, if there is "OK" in this 30 minutes, then we say it is okay now
-        var arr_res = ["0", 4];
         var arr_cvx_log_30lines = arr_cvx_log.slice(Math.max(arr_cvx_log.length - 30, 1));
         for (var i=0; i<arr_cvx_log_30lines.length-1; i++) {
             var str_msg = arr_cvx_log_30lines[i];
