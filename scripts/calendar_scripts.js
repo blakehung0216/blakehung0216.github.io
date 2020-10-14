@@ -442,11 +442,12 @@ function selectAllDates() {
     var int_today_value = "";
     
     // Supervised
-    if (str_cal_headline === 'Supervised' || str_cal_headline === 'Machine' || str_cal_headline === 'with') {
-        int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
+    //if (str_cal_headline === 'Supervised' || str_cal_headline === 'Machine' || str_cal_headline === 'with') {
+    if (str_cal_headline === 'Supervised' || str_cal_headline === 'Machine') {
+        int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()+1<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate()-1)<10? '0'+(today.getDate()-1) : (today.getDate()-1)));
     // Hierarchical
     } else {
-        int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate())<10? '0'+(today.getDate()) : (today.getDate())));
+        int_today_value = parseInt(String(today.getFullYear()) + String(today.getMonth()+1<10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1)) + String((today.getDate())<10? '0'+(today.getDate()) : (today.getDate())));
     }
     var int_rest_days = 32 - new Date(parseInt(selectYear.value), parseInt(selectMonth.value), 32).getDate()//int_today_value % 100;
     
