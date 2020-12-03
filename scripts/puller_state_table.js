@@ -119,9 +119,6 @@ async function puller_tool_state() {
     // Add results
     for (var i=0; i<arr_all_tools.length; i++) {
         var str_log_tool = arr_all_tools[i];
-        if (!arr_all_tools.includes(str_log_tool)) {
-            continue;
-        }
         var str_log_filename = str_log_path + str_log_tool + '.log';
 
         var str_allText = readTextFile(str_log_filename); //JH, MJHJ5, 300, MELTDOWN, 0, 
@@ -154,6 +151,7 @@ async function puller_tool_state() {
         
         var table_result = document.createElement('tbody');
         var tr_puller = table_result.appendChild(document.createElement('tr'));
+        //console.log(arr_table_result);
         for (var j=0; j<arr_table_result.length; j++) {
             var td_puller = document.createElement('td');
             td_puller.style.textAlign = 'center';
@@ -182,6 +180,29 @@ async function puller_tool_state() {
                 tr_puller.style.backgroundColor = '#ffff00';
             } else if (cell_value === '---') {
                 tr_puller.style.backgroundColor = '#C0C0C0';
+            } else if (arr_online_tools.includes(cell_value)) {
+                td_puller.id = arr_table_result[0] + "_" + arr_table_result[1]; // JC_MJCY1
+                td_puller.onclick = function() {
+                    // Show the LZD instant image results
+                    var obj_modal = document.createElement('div');
+                    obj_modal.classList.add('modal');
+                    obj_modal.id = "puller_lzd-modal";
+
+                    var obj_child = document.createElement('div');
+                    obj_child.classList.add('modal-content');
+                    obj_child.id = "puller_lzd_modal-content";
+
+                    var str_png_detail = "PULLER_" + this.id + ".png";
+                    obj_img_roller_detail = document.createElement("IMG");
+                    obj_img_roller_detail.setAttribute("src", "../img/puller_img/PULLER_LZD_IMG/" + str_png_detail);
+                    obj_img_roller_detail.setAttribute("style", "width:1400px;");
+                    obj_img_roller_detail.setAttribute("alt", "");
+
+                    obj_child.appendChild(obj_img_roller_detail);
+                    obj_modal.appendChild(obj_child);
+                    obj_modal.style.display = "block";
+                    document.body.appendChild(obj_modal);
+                }
             }
             
             td_puller.appendChild(document.createTextNode(cell_value));
@@ -198,6 +219,14 @@ async function puller_tool_state() {
     table_lzd.parentNode.removeChild(table_lzd);
     } // End while true
     
+}
+
+// Puller LZD status Pop-out window
+window.onclick = function(event) {
+    if (event.target === document.getElementById("puller_lzd-modal")) {
+        var obj_modal = event.target;
+        obj_modal.parentNode.removeChild(obj_modal);
+    }
 }
 
 puller_tool_state();
