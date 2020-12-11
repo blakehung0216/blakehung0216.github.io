@@ -181,7 +181,10 @@ async function puller_tool_state() {
             } else if (cell_value === '---') {
                 tr_puller.style.backgroundColor = '#C0C0C0';
             } else if (arr_online_tools.includes(cell_value)) {
-                td_puller.id = arr_table_result[0] + "_" + arr_table_result[1]; // JC_MJCY1
+                td_puller.id = "JC_td";//arr_table_result[0] + "_" + arr_table_result[1]; // JC_MJCY1
+                td_puller.setAttribute("style", "cursor:pointer;");
+                td_puller.style.textAlign = 'center';
+                td_puller.style.fontSize = '15px';
                 td_puller.onclick = function() {
                     // Show the LZD instant image results
                     var obj_modal = document.createElement('div');
@@ -195,7 +198,7 @@ async function puller_tool_state() {
                     var str_png_detail = "PULLER_" + this.id + ".png";
                     obj_img_roller_detail = document.createElement("IMG");
                     obj_img_roller_detail.setAttribute("src", "../img/puller_img/PULLER_LZD_IMG/" + str_png_detail);
-                    obj_img_roller_detail.setAttribute("style", "width:1400px;");
+                    obj_img_roller_detail.setAttribute("style", "width:1000px;");
                     obj_img_roller_detail.setAttribute("alt", "");
 
                     obj_child.appendChild(obj_img_roller_detail);
