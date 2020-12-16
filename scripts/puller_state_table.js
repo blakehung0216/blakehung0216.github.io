@@ -181,7 +181,7 @@ async function puller_tool_state() {
             } else if (cell_value === '---') {
                 tr_puller.style.backgroundColor = '#C0C0C0';
             } else if (arr_online_tools.includes(cell_value)) {
-                td_puller.id = "JC_td";//arr_table_result[0] + "_" + arr_table_result[1]; // JC_MJCY1
+                td_puller.id = arr_table_result[0] + "_" + arr_table_result[1]; // JC_MJCY1
                 td_puller.setAttribute("style", "cursor:pointer;");
                 td_puller.style.textAlign = 'center';
                 td_puller.style.fontSize = '15px';
