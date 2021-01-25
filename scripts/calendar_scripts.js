@@ -111,8 +111,8 @@ function reset_objs() {
 }
 
 myResetButton.onclick = function() {
-    // Roller
-    if (document.getElementById('headline').textContent.split(' ')[0] === 'Main') { reset_objs();}
+    // Roller or Alarm logs
+    if (document.getElementById('headline').textContent.split(' ')[0] === 'Main' || document.getElementById('headline').textContent.split(' ')[0] === 'Alarm') { reset_objs();}
     
     // 41,61,20,HPM
     if (str_cal_headline === 'Supervised') {
@@ -786,6 +786,75 @@ function showMainRollerImages() {
     return;
 }
 
+function showAlarmLogMsg() {
+    var tmp_result_dates = arr_select_dates.slice();
+    tmp_result_dates = tmp_result_dates.sort();
+    var str_selected_tool = (selectedTool.value);
+    
+    // Alarm message path
+    var str_path_alarm_path = "";
+    
+    var table_alarm = document.createElement('TABLE');
+    table_alarm.id = "table_alarm";
+    table_alarm.border = "3px #FFD382 dashed";
+    table_alarm.align = "center";
+
+    var table_alarm_col = table_alarm.appendChild(document.createElement('tbody'));
+    table_alarm_col.id = "table_hpm_columns";
+    table_alarm_col.style.background = "#994C00";
+    table_alarm_col.style.fontSize = "4px";
+    table_alarm_col.style.color = "#ffffff";
+    
+    var tr_alarm_col = table_alarm_col.appendChild(document.createElement('tr'));
+    var arr_wsaw_alarm_col = ["DATE", "TIME", "USER", "CODE", "MESSAGE"]
+    for (var x=0; x<arr_wsaw_alarm_col.length; x++) {
+        var td_alarm_col = tr_alarm_col.appendChild(document.createElement('td'));
+        var a_alarm_col = td_alarm_col.appendChild(document.createElement('b'));
+        if (arr_wsaw_alarm_col[x] === "CODE") {
+            td_alarm_col.style.width = '150px';
+        } else if (arr_wsaw_alarm_col[x] === "MESSAGE") {
+            td_alarm_col.style.width = '400px';
+        } else {
+            td_alarm_col.style.width = '80px';
+        }
+        a_alarm_col.innerText = arr_wsaw_alarm_col[x];
+    }
+    
+    var table_alarm_result = table_alarm.appendChild(document.createElement('tbody'));
+    table_alarm_result.id = "table_alarm_result";
+    table_alarm_result.style.background = "#ffffff";
+    table_alarm_result.style.fontSize = "4px";
+    table_alarm_result.style.color = "#000000";
+    
+    for (var i=0; i<tmp_result_dates.length; i++) {
+        //console.log(tmp_result_dates[i]);
+        str_path_alarm_path = "WSAW_ALARMS/alarm_logs/" + str_selected_tool + "/" + str_selected_tool + "_" + tmp_result_dates[i] + "_alarms.csv";
+        str_alarm_msg = readTextFile(str_path_alarm_path);
+        //console.log(str_alarm_msg);
+        
+        /*var p = document.createElement('p');
+        p.id = str_selected_tool+'_'+tmp_result_dates[i]+'_alarmlogs';
+        arr_reset_objs.includes(p.id);
+        p.innerHTML = str_alarm_msg;
+        
+        document.body.appendChild(p);//*/
+        arr_alarm_msg = str_alarm_msg.split("\n");
+        for (var j=0; j<arr_alarm_msg.length; j++) {
+            var tr_alarm_res = table_alarm_result.appendChild(document.createElement('tr'));
+            var arr_alarm_msg_detail = arr_alarm_msg[j].split(",")
+            for (var k=0; k<arr_alarm_msg_detail.length; k++) {
+                var td_alarm_res = tr_alarm_res.appendChild(document.createElement('td'));
+                //td_alarm_res.style.width = '40px';
+                var a_alarm_col = td_alarm_res.appendChild(document.createElement('b'));
+                a_alarm_col.innerText = arr_alarm_msg_detail[k];
+            }
+        }
+    }
+    arr_reset_objs.push(table_alarm.id);
+    document.body.appendChild(table_alarm);
+    return;
+}
+
 myGoButton.onclick = (async function() {
     document.body.style.cursor = 'progress';
     await sleep(300);
@@ -802,6 +871,8 @@ myGoButton.onclick = (async function() {
         showNCUResultsImages();
     }else if (document.getElementById('headline').textContent.split(' ')[0] === "Main") {
         showMainRollerImages();
+    }else if (document.getElementById('headline').textContent.split(' ')[0] === "Alarm") {
+        showAlarmLogMsg();
     } else {
         if (str_cal_headline === 'Supervised') {
             showDecisionTreeImages();
